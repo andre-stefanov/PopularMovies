@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="grid_filter">
+        <item name="most_popular">Popular</item>
+        <item name="top_rated">Top rated</item>
+    </string-array>
+</resources>

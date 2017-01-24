@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="loading">Loading…</string>
-    <array name="grid_filter">
-        <item name="most_popular">Most popular</item>
-        <item name="top_rated">Highest rated</item>
-    </array>
     <string name="poster">Poster</string>
     <string name="backdrop_image">Backdrop image</string>
 </resources>
