@@ -104,7 +104,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
         final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.filters, android.R.layout.simple_spinner_item);
+                R.array.grid_filter, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);

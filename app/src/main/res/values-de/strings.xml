@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Beliebte Filme</string>
     <string name="loading">Lade…</string>
-    <string name="sort_by_most_popular">Beliebteste</string>
-    <string name="sort_by_top_rated">Bestbewertet</string>
+    <array name="grid_filter">
+        <item name="most_popular">Beliebteste</item>
+        <item name="top_rated">Bestbewertet</item>
+    </array>
     <string name="poster">Poster</string>
     <string name="backdrop_image">Hintergrundbild</string>
 </resources>
