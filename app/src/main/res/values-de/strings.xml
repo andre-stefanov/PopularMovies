@@ -3,4 +3,6 @@
     <string name="loading">Lade…</string>
     <string name="poster">Poster</string>
     <string name="backdrop_image">Hintergrundbild</string>
+    <string name="most_popular">Beliebteste</string>
+    <string name="top_rated">Bestbewertet</string>
 </resources>
