@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="sort_by_most_popular">Most popular</string>
     <string name="sort_by_top_rated">Highest rated</string>
-
-    <string name="preference_file_key">com.example.android.popularmovies.PREFERENCES</string>
     <string name="poster">Poster</string>
     <string name="backdrop_image">Backdrop image</string>
-    <string name="poseter">Movie poster</string>
 </resources>

@@ -30,10 +30,6 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
 
     private static final String TAG = "MoviesGridActivity";
 
-    public static final String KEY_MOVIES_FILTER_KEY = "movie_filter";
-    public static final String MOVIES_FILTER_POPULAR = "popular";
-    public static final String MOVIES_FILTER_TOP_RATED = "top_rated";
-
     private SharedPreferences sharedPreferences;
 
     private RecyclerView mMoviesRecyclerView;
@@ -51,7 +47,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_grid);
 
-        this.sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE);
+        this.sharedPreferences = getSharedPreferences(Preferences.PREFS_FILE_NAME, MODE_PRIVATE);
 
         this.movies = new ArrayList<>();
 
@@ -91,10 +87,10 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
         int nextPageToLoad = movies.size() / 20 + 1;
 
         switch (getCurrentFilter()) {
-            case MOVIES_FILTER_POPULAR:
+            case Preferences.MOVIES_FILTER_POPULAR:
                 tmdbClient.loadPopularMoviesPage(nextPageToLoad, this, Locale.getDefault().getLanguage());
                 break;
-            case MOVIES_FILTER_TOP_RATED:
+            case Preferences.MOVIES_FILTER_TOP_RATED:
                 tmdbClient.loadTopRatedMoviesPage(nextPageToLoad, this, Locale.getDefault().getLanguage());
                 break;
         }
@@ -138,7 +134,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
 
     public void sortByMostPopular() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
+        editor.putString(Preferences.KEY_MOVIES_FILTER_KEY, Preferences.MOVIES_FILTER_POPULAR);
         editor.apply();
 
         movies.clear();
@@ -149,7 +145,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
 
     public void sortByTopRated() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_TOP_RATED);
+        editor.putString(Preferences.KEY_MOVIES_FILTER_KEY, Preferences.MOVIES_FILTER_TOP_RATED);
         editor.apply();
 
         movies.clear();
@@ -159,7 +155,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
     }
 
     private String getCurrentFilter() {
-        return sharedPreferences.getString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
+        return sharedPreferences.getString(Preferences.KEY_MOVIES_FILTER_KEY, Preferences.MOVIES_FILTER_POPULAR);
     }
 
     @Override
