@@ -187,4 +187,13 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
     public void onFailure(Call<MoviesPage> call, Throwable t) {
         mProgressView.setVisibility(View.GONE);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (materialSheetFab.isSheetVisible()) {
+            materialSheetFab.hideSheet();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
