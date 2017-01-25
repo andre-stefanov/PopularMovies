@@ -81,10 +81,14 @@ public class TMDBClient {
     }
 
     public void loadPoster(String posterPath, ImageView imageView) {
+        loadPoster(posterPath, imageView, null);
+    }
+
+    public void loadPoster(String posterPath, ImageView imageView, com.squareup.picasso.Callback callback) {
         picasso.cancelRequest(imageView);
         picasso.load(TMDB_POSTER_BASE_URL + posterPath)
                 .error(R.drawable.ic_error)
-                .into(imageView);
+                .into(imageView, callback);
     }
 
     public void loadBackdrop(String backdropPath, ImageView imageView) {

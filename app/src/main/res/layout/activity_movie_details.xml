@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,14 +10,13 @@
         android:id="@+id/main_appbar"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/main_collapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
@@ -36,7 +36,6 @@
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                 app:layout_collapseMode="pin"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -67,12 +66,12 @@
                     android:paddingBottom="16dp"
                     android:paddingEnd="64dp"
                     android:paddingStart="16dp"
-                    android:textColor="@android:color/primary_text_dark"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"/>
 
                 <ImageView
                     android:id="@+id/imageview_poster"
+                    android:transitionName="poster"
                     android:layout_width="160dp"
                     android:layout_height="240dp"
                     android:scaleType="fitCenter"
@@ -102,6 +101,7 @@
                     android:paddingTop="4dp"
                     android:drawablePadding="8dp"
                     android:gravity="center_vertical"
+                    android:visibility="gone"
                     />
 
                 <TextView
@@ -114,7 +114,6 @@
                     android:gravity="center_vertical"
                     android:layout_below="@id/textview_duration"
                     android:layout_toEndOf="@id/imageview_poster"/>
-
 
             </RelativeLayout>
 
@@ -130,15 +129,25 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_height="wrap_content"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@drawable/ripple"
-        android:clickable="true"
-        android:src="@drawable/ic_star_empty"
+        android:layout_height="wrap_content"
         app:layout_anchor="@id/main_appbar"
-        app:layout_anchorGravity="bottom|right|end"
-        android:visibility="visible"/>
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin">
+
+        <com.example.android.popularmovies.Fab
+            android:id="@+id/fab"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:foreground="@drawable/ripple"
+            app:backgroundTint="@color/colorAccent"
+            android:clickable="true"
+            android:transitionName="fab"
+            android:src="@drawable/ic_star_empty"/>
+
+    </FrameLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

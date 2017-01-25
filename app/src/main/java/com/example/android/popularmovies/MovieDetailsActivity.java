@@ -3,34 +3,31 @@ package com.example.android.popularmovies;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.TMDBClient;
-import com.example.android.popularmovies.model.MovieDetails;
+import com.example.android.popularmovies.model.Movie;
+import com.squareup.picasso.Callback;
 
 import java.text.ParseException;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class MovieDetailsActivity extends AppCompatActivity implements Callback<MovieDetails> {
+public class MovieDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "MovieDetailsActivity";
 
-    public static final String MOVIE_ID_EXTRA = "movie_id";
-    public static final String MOVIE_TITLE_EXTRA = "movie_title";
+    public static final String MOVIE_PARCELABLE_EXTRA = "movie";
 
     private TMDBClient tmdbClient;
 
-    private MovieDetails movieDetails;
-
-    private Toolbar toolbar;
     private ImageView backdropImageView;
     private TextView titleTextView;
     private ImageView posterImageView;
@@ -44,8 +41,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements Callback<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+
+        final Fab fab = (Fab) findViewById(R.id.fab);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -59,48 +58,79 @@ public class MovieDetailsActivity extends AppCompatActivity implements Callback<
         durationTextView = (TextView) findViewById(R.id.textview_duration);
         votesTextView = (TextView) findViewById(R.id.textview_votes);
 
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                Log.d(TAG, "onOffsetChanged(): " + verticalOffset);
+                if (appBarLayout.getHeight() / 2 < -verticalOffset) {
+                    Log.d(TAG, "onOffsetChanged: hide");
+                    fab.hide();
+                } else if (verticalOffset != 0) {
+                    fab.show(0,0);
+                    Log.d(TAG, "onOffsetChanged: show");
+                }
+            }
+        });
+
         tmdbClient = new TMDBClient(this);
+
+        postponeEnterTransition();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int movieId = extras.getInt(MOVIE_ID_EXTRA);
-            tmdbClient.loadMovieDetails(movieId, this);
+            Movie movie = extras.getParcelable(MOVIE_PARCELABLE_EXTRA);
+
+            if (movie != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar calendar = Calendar.getInstance();
+                try {
+                    calendar.setTime(dateFormat.parse(movie.getReleaseDate()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                titleTextView.setText(String.format(Locale.ENGLISH, "%s (%s)", movie.getTitle(), String.valueOf(calendar.get(Calendar.YEAR))));
+                overviewTextView.setText(movie.getOverview());
+                yearTextView.setText(movie.getReleaseDate());
+                votesTextView.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movie.getVoteAverage(), movie.getVoteCount()));
+//                durationTextView.setText(String.format(Locale.ENGLISH, "%d Min", movie.getRuntime()));
+
+                tmdbClient.loadBackdrop(movie.getBackdropPath(), backdropImageView);
+                tmdbClient.loadPoster(movie.getPosterPath(), posterImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        scheduleStartPostponedTransition(posterImageView);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+            }
         }
-    }
-
-    @Override
-    public void onResponse(Call<MovieDetails> call, Response<MovieDetails> response) {
-        movieDetails = response.body();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance();
-        try {
-            calendar.setTime(dateFormat.parse(movieDetails.getReleaseDate()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        tmdbClient.loadBackdrop(movieDetails.getBackdropPath(), backdropImageView);
-        tmdbClient.loadPoster(movieDetails.getPosterPath(), posterImageView);
-        titleTextView.setText(String.format(Locale.ENGLISH, "%s (%s)", movieDetails.getTitle(), String.valueOf(calendar.get(Calendar.YEAR))));
-        overviewTextView.setText(movieDetails.getOverview());
-        yearTextView.setText(movieDetails.getReleaseDate());
-        durationTextView.setText(String.format(Locale.ENGLISH, "%d Min", movieDetails.getRuntime()));
-        votesTextView.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movieDetails.getVoteAverage(), movieDetails.getVoteCount()));
-    }
-
-    @Override
-    public void onFailure(Call<MovieDetails> call, Throwable t) {
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                supportFinishAfterTransition();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scheduleStartPostponedTransition(final View sharedElement) {
+        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        startPostponedEnterTransition();
+                        return true;
+                    }
+                });
     }
 }
