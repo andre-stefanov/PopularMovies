@@ -26,9 +26,9 @@ import static com.example.android.popularmovies.data.TMDBConstants.TMDB_POSTER_B
 
 public class TMDBClient {
 
-    private TMDBApiService apiService;
+    private final TMDBApiService apiService;
 
-    private Picasso picasso;
+    private final Picasso picasso;
 
     public TMDBClient(Context context) {
 

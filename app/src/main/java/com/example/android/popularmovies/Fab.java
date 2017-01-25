@@ -18,8 +18,6 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
 
     private static final int FAB_ANIM_DURATION = 200;
 
-    private boolean animationEnabled = true;
-
     public Fab(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -31,7 +29,7 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
         setTranslation(translationX, translationY);
 
         // Only use scale animation if FAB is hidden
-        if (animationEnabled && getVisibility() != View.VISIBLE) {
+        if (getVisibility() != View.VISIBLE) {
             // Pivots indicate where the animation begins from
             float pivotX = getPivotX() + translationX;
             float pivotY = getPivotY() + translationY;
@@ -58,7 +56,7 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
     public void hide() {
         Log.d(TAG, "hide() called");
         // Only use scale animation if FAB is visible
-        if (animationEnabled && getVisibility() == View.VISIBLE) {
+        if (getVisibility() == View.VISIBLE) {
             // Pivots indicate where the animation begins from
             float pivotX = getPivotX() + getTranslationX();
             float pivotY = getPivotY() + getTranslationY();
@@ -81,11 +79,4 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
         return AnimationUtils.loadInterpolator(getContext(), R.interpolator.msf_interpolator);
     }
 
-    public boolean isAnimationEnabled() {
-        return animationEnabled;
-    }
-
-    public void setAnimationEnabled(boolean animationEnabled) {
-        this.animationEnabled = animationEnabled;
-    }
 }

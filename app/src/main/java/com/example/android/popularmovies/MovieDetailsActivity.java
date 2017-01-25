@@ -4,6 +4,7 @@ import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,7 +34,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView posterImageView;
     private TextView overviewTextView;
     private TextView yearTextView;
-    private TextView durationTextView;
     private TextView votesTextView;
 
     @Override
@@ -46,16 +46,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         final Fab fab = (Fab) findViewById(R.id.fab);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         backdropImageView = (ImageView) findViewById(R.id.main_backdrop);
         titleTextView = (TextView) findViewById(R.id.textview_title);
         posterImageView = (ImageView) findViewById(R.id.imageview_poster);
         overviewTextView = (TextView) findViewById(R.id.textview_overview);
         yearTextView = (TextView) findViewById(R.id.textview_release);
-        durationTextView = (TextView) findViewById(R.id.textview_duration);
         votesTextView = (TextView) findViewById(R.id.textview_votes);
 
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
@@ -94,7 +96,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 overviewTextView.setText(movie.getOverview());
                 yearTextView.setText(movie.getReleaseDate());
                 votesTextView.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movie.getVoteAverage(), movie.getVoteCount()));
-//                durationTextView.setText(String.format(Locale.ENGLISH, "%d Min", movie.getRuntime()));
 
                 tmdbClient.loadBackdrop(movie.getBackdropPath(), backdropImageView);
                 tmdbClient.loadPoster(movie.getPosterPath(), posterImageView, new Callback() {

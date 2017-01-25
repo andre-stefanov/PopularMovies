@@ -10,9 +10,9 @@ import com.example.android.popularmovies.model.Movie;
 
 import java.util.ArrayList;
 
-public class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAdapter.MovieImageViewHolder> {
+class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAdapter.MovieImageViewHolder> {
 
-    public interface OnDataEventsListener {
+    interface OnDataEventsListener {
 
         void onRequestMoreData();
 
@@ -20,11 +20,11 @@ public class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAd
 
     }
 
-    public static class MovieImageViewHolder extends RecyclerView.ViewHolder {
+    static class MovieImageViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public ImageView mImageView;
+        final ImageView mImageView;
 
-        public MovieImageViewHolder(ImageView v) {
+        MovieImageViewHolder(ImageView v) {
             super(v);
             mImageView = (ImageView) v.findViewById(R.id.imageview_poster);
         }
@@ -36,7 +36,7 @@ public class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAd
 
     private ArrayList<Movie> movies;
 
-    public TMDBMoviesGridAdapter(ArrayList<Movie> data, View.OnClickListener clickListener) {
+    TMDBMoviesGridAdapter(ArrayList<Movie> data, View.OnClickListener clickListener) {
         this.movies = data;
         this.clickListener = clickListener;
     }
@@ -64,7 +64,7 @@ public class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAd
         return movies.size();
     }
 
-    public void setOnDataEventsListener(OnDataEventsListener onDataEventsListener) {
+    void setOnDataEventsListener(OnDataEventsListener onDataEventsListener) {
         this.onDataEventsListener = onDataEventsListener;
     }
 
