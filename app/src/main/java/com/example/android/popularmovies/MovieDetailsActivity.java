@@ -18,7 +18,9 @@ import com.example.android.popularmovies.data.TMDBClient;
 import com.example.android.popularmovies.model.Movie;
 import com.squareup.picasso.Callback;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.Locale;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -64,13 +66,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d(TAG, "onOffsetChanged(): " + verticalOffset);
                 if (appBarLayout.getHeight() / 2 < -verticalOffset) {
-                    Log.d(TAG, "onOffsetChanged: hide");
                     fab.hide();
                 } else if (verticalOffset != 0) {
                     fab.show(0,0);
-                    Log.d(TAG, "onOffsetChanged: show");
                 }
             }
         });
@@ -85,16 +84,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             if (movie != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar calendar = Calendar.getInstance();
+                DateFormat localFormat = android.text.format.DateFormat.getLongDateFormat(this);
+                Date releaseDate = null;
                 try {
-                    calendar.setTime(dateFormat.parse(movie.getReleaseDate()));
+                    releaseDate = dateFormat.parse(movie.getReleaseDate());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                String year = new SimpleDateFormat("yyyy").format(releaseDate);
+                String localizedReleaseDate = localFormat.format(releaseDate);
 
-                titleTextView.setText(String.format(Locale.ENGLISH, "%s (%s)", movie.getTitle(), String.valueOf(calendar.get(Calendar.YEAR))));
+                titleTextView.setText(String.format(Locale.ENGLISH, "%s (%s)", movie.getTitle(), year));
                 overviewTextView.setText(movie.getOverview());
-                yearTextView.setText(movie.getReleaseDate());
+                yearTextView.setText(localizedReleaseDate);
                 votesTextView.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movie.getVoteAverage(), movie.getVoteCount()));
 
                 tmdbClient.loadBackdrop(movie.getBackdropPath(), backdropImageView);

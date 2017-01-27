@@ -16,7 +16,7 @@
             android:id="@+id/main_collapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
@@ -88,6 +88,7 @@
                     android:layout_alignTop="@id/imageview_poster"
                     android:layout_toEndOf="@id/imageview_poster"
                     android:drawableStart="@drawable/ic_date"
+                    android:drawableTint="@color/colorPrimaryText"
                     android:drawablePadding="8dp"
                     android:gravity="center_vertical"/>
 
@@ -131,7 +132,8 @@
             app:backgroundTint="@color/colorAccent"
             android:clickable="true"
             android:transitionName="fab"
-            android:src="@drawable/ic_star_empty"/>
+            android:src="@drawable/ic_star_empty"
+            android:tint="@color/colorPrimaryText"/>
 
     </FrameLayout>
 

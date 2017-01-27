@@ -4,10 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowContentTransitions">true</item>
-    </style>
-
-    <style name="AppThemeMovieDetails" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowContentTransitions">true</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
     <style name="Theme.MaterialSheetFab.Base" parent="Theme.AppCompat.Light.NoActionBar">

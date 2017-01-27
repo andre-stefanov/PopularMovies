@@ -68,7 +68,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
         this.mLayoutManager = new GridLayoutManager(this, columns);
         this.mMoviesRecyclerView.setLayoutManager(mLayoutManager);
 
-        this.mMoviesAdapter = new TMDBMoviesGridAdapter(movies, new View.OnClickListener() {
+        this.mMoviesAdapter = new TMDBMoviesGridAdapter(this, movies, new View.OnClickListener() {
             @Override
             public void onClick(View posterView) {
                 Movie movie = (Movie) posterView.getTag();
@@ -94,6 +94,7 @@ public class MoviesGridActivity extends AppCompatActivity implements TMDBMoviesG
         });
         this.mMoviesAdapter.setOnDataEventsListener(this);
         this.mMoviesRecyclerView.setAdapter(mMoviesAdapter);
+
 
         Fab fab = (Fab) findViewById(R.id.fab);
         View sheetView = findViewById(R.id.fab_sheet);

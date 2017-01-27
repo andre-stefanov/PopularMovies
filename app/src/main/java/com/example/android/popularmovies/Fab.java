@@ -3,7 +3,6 @@ package com.example.android.popularmovies;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,7 +23,6 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
 
     @Override
     public void show(float translationX, float translationY) {
-        Log.d(TAG, "show() called with: translationX = [" + translationX + "], translationY = [" + translationY + "]");
         // Set FAB's translation
         setTranslation(translationX, translationY);
 
@@ -54,7 +52,6 @@ public class Fab extends FloatingActionButton implements AnimatedFab {
 
     @Override
     public void hide() {
-        Log.d(TAG, "hide() called");
         // Only use scale animation if FAB is visible
         if (getVisibility() == View.VISIBLE) {
             // Pivots indicate where the animation begins from

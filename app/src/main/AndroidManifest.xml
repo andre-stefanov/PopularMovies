@@ -17,8 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MovieDetailsActivity"
-            android:theme="@style/AppThemeMovieDetails" />
+            android:name=".MovieDetailsActivity" />
     </application>
 
 </manifest>

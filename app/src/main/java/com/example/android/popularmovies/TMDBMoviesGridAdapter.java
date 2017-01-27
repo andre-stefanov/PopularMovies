@@ -1,9 +1,12 @@
 package com.example.android.popularmovies;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.example.android.popularmovies.model.Movie;
@@ -11,6 +14,10 @@ import com.example.android.popularmovies.model.Movie;
 import java.util.ArrayList;
 
 class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAdapter.MovieImageViewHolder> {
+
+    private final Context context;
+
+    private int lastPosition = -1;
 
     interface OnDataEventsListener {
 
@@ -36,7 +43,8 @@ class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAdapter.M
 
     private ArrayList<Movie> movies;
 
-    TMDBMoviesGridAdapter(ArrayList<Movie> data, View.OnClickListener clickListener) {
+    TMDBMoviesGridAdapter(Context context, ArrayList<Movie> data, View.OnClickListener clickListener) {
+        this.context = context;
         this.movies = data;
         this.clickListener = clickListener;
     }
@@ -54,7 +62,12 @@ class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAdapter.M
     public void onBindViewHolder(final MovieImageViewHolder holder, final int position) {
         final Movie movie = movies.get(position);
         holder.mImageView.setTag(movie);
+        holder.mImageView.setImageDrawable(null);
+
         onDataEventsListener.onRequestMoviePoster(movie, holder);
+
+        setAnimation(holder.mImageView, position);
+
         if (position == (movies.size() - 1) && onDataEventsListener != null)
             onDataEventsListener.onRequestMoreData();
     }
@@ -68,4 +81,15 @@ class TMDBMoviesGridAdapter extends RecyclerView.Adapter<TMDBMoviesGridAdapter.M
         this.onDataEventsListener = onDataEventsListener;
     }
 
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+        viewToAnimate.startAnimation(animation);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(MovieImageViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.mImageView.clearAnimation();
+    }
 }
