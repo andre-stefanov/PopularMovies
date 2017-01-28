@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,13 +9,15 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.example.android.popularmovies.data.TMDBClient;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.utils.DefaultAnimationListener;
 import com.example.android.popularmovies.utils.EndlessRecyclerViewScrollListener;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -54,7 +57,7 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
             public void onClick(View posterView) {
                 Movie movie = (Movie) posterView.getTag();
 
-                Intent intent = new Intent(MoviesGridActivity.this, MovieDetailsActivity.class);
+                final Intent intent = new Intent(MoviesGridActivity.this, MovieDetailsActivity.class);
                 intent.putExtra(MovieDetailsActivity.MOVIE_PARCELABLE_EXTRA, movie);
 
                 View decor = getWindow().getDecorView();
@@ -65,13 +68,21 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                 Pair<View, String> p2 = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
                 Pair<View, String> p3 = Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                @SuppressWarnings("unchecked")
+                final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         MoviesGridActivity.this,
                         p1, p2, p3);
 
+                Animation animation = AnimationUtils.loadAnimation(MoviesGridActivity.this, com.github.clans.fab.R.anim.fab_scale_down);
+                animation.setAnimationListener(new DefaultAnimationListener() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        super.onAnimationEnd(animation);
+                        startActivity(intent, options.toBundle());
+                    }
+                });
+                fabMenu.setMenuButtonHideAnimation(animation);
                 fabMenu.hideMenuButton(true);
-
-                startActivity(intent, options.toBundle());
             }
         });
         moviesRecyclerView.setAdapter(moviesAdapter);
@@ -138,6 +149,7 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         setCurrentFilter(MOVIES_FILTER_TOP_RATED);
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void setCurrentFilter(String filter) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_MOVIES_FILTER_KEY, filter);

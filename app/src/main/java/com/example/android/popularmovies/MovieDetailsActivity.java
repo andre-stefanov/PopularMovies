@@ -135,6 +135,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                fab.hide(true);
                 supportFinishAfterTransition();
                 return true;
         }
