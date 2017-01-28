@@ -93,6 +93,7 @@ public class TMDBClient {
         imageView.setImageDrawable(null);
         picasso.load(TMDB_POSTER_BASE_URL + posterPath)
                 .error(R.drawable.ic_error)
+                .noFade()
                 .into(imageView, callback);
     }
 

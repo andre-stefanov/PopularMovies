@@ -68,6 +68,8 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         this.clickListener = clickListener;
         this.preferences = context.getSharedPreferences(Preferences.PREFS_FILE_NAME, Context.MODE_PRIVATE);
         this.preferences.registerOnSharedPreferenceChangeListener(this);
+
+        setHasStableIds(true);
     }
 
     @Override
@@ -147,5 +149,13 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             movies.clear();
             notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (position < movies.size())
+            return movies.get(position).getId();
+        else
+            return 0;
     }
 }
