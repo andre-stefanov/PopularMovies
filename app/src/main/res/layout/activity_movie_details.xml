@@ -117,26 +117,15 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <FrameLayout
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/main_appbar"
         app:layout_anchorGravity="bottom|end"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin">
-
-        <com.example.android.popularmovies.Fab
-            android:id="@+id/fab"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:foreground="@drawable/ripple"
-            app:backgroundTint="@color/colorAccent"
-            android:clickable="true"
-            android:transitionName="fab"
-            android:src="@drawable/ic_star_empty"
-            android:tint="@color/colorPrimaryText"/>
-
-    </FrameLayout>
-
-
+        android:visibility="invisible"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_star_empty"
+        app:fab_colorNormal="@color/colorTopRatedFab"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,13 +1,13 @@
 package com.example.android.popularmovies;
 
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.data.TMDBClient;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.utils.TransitionListenerAdapter;
+import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Callback;
 
 import java.text.DateFormat;
@@ -37,16 +39,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView overviewTextView;
     private TextView yearTextView;
     private TextView votesTextView;
+    private FloatingActionButton fab;
+
+    private boolean showFabPending = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-
-        final Fab fab = (Fab) findViewById(R.id.fab);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -62,14 +65,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
         yearTextView = (TextView) findViewById(R.id.textview_release);
         votesTextView = (TextView) findViewById(R.id.textview_votes);
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (appBarLayout.getHeight() / 2 < -verticalOffset) {
-                    fab.hide();
+                    fab.hide(true);
                 } else if (verticalOffset != 0) {
-                    fab.show(0,0);
+                    fab.show(true);
                 }
             }
         });
@@ -113,6 +118,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 });
             }
         }
+
+        Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
+        sharedElementEnterTransition.addListener(new TransitionListenerAdapter() {
+            @Override
+            public void onTransitionEnd(@NonNull Transition transition) {
+                if (showFabPending) {
+                    fab.show(true);
+                    showFabPending = false;
+                }
+            }
+        });
     }
 
     @Override
@@ -135,5 +151,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        fab.hide(true);
+        super.onBackPressed();
     }
 }

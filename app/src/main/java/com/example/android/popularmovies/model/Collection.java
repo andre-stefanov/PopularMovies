@@ -3,7 +3,7 @@ package com.example.android.popularmovies.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class BelongsToCollection {
+public class Collection {
 
     @SerializedName("id")
     @Expose

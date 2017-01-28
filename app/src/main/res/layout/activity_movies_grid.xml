@@ -10,11 +10,12 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_movies"
-        android:scrollbars="vertical"
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_toolbar"
@@ -28,89 +29,43 @@
         android:layout_alignParentStart="true"
         android:visibility="gone"/>
 
-    <LinearLayout
-        android:id="@+id/progress_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#a000">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorPrimaryLight"
-            android:text="@string/loading"/>
-
-    </LinearLayout>
-
-    <com.example.android.popularmovies.Fab
+    <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:foreground="@drawable/ripple"
-        app:backgroundTint="@color/colorAccent"
-        android:clickable="true"
-        android:transitionName="fab"
-        android:src="@drawable/ic_star_filled"
-        android:tint="@color/colorPrimaryText"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
-    <!-- Overlay that dims the screen -->
-    <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
-        android:id="@+id/dim_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <io.codetail.widget.RevealLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="end|bottom"
-        android:orientation="vertical">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:src="@drawable/ic_whatshot"
+        app:menu_colorNormal="@color/colorPopularFab"
+        app:menu_colorPressed="@color/colorPopularFab"
+        app:menu_icon="@drawable/ic_whatshot"
+        app:menu_backgroundColor="#9fff">
 
-        <!-- Sheet that contains your items -->
-        <android.support.v7.widget.CardView
-            android:id="@+id/fab_sheet"
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_popular"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_whatshot"
+            app:fab_size="mini"
+            app:fab_label="@string/most_popular"
+            app:fab_colorNormal="@color/colorPopularFab"
+            app:fab_colorPressed="@color/colorPopularFab"
+            android:onClick="showMostPopular"/>
 
-            <!-- Sheet items -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_top_rated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_filled"
+            app:fab_label="@string/top_rated"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/colorTopRatedFab"
+            app:fab_colorPressed="@color/colorTopRatedFab"
+            android:onClick="showTopRated"/>
 
-                <!-- Popular -->
-                <TextView
-                    android:id="@+id/show_most_popular"
-                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                    android:drawableStart="@drawable/ic_whatshot"
-                    android:text="@string/most_popular"
-                    android:onClick="showMostPopular"/>
-
-                <!-- Top Rated -->
-                <TextView
-                    android:id="@+id/show_top_rated"
-                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                    android:drawableStart="@drawable/ic_star_filled"
-                    android:text="@string/top_rated"
-                    android:onClick="showTopRated"/>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-    </io.codetail.widget.RevealLinearLayout>
+    </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

@@ -47,6 +47,7 @@ dependencies {
 
     compile 'com.jude:easyrecyclerview:4.3.7'
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
+    compile 'com.github.clans:fab:1.6.4'
 
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:25.1.0'

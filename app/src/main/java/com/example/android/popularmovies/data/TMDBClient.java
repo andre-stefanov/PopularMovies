@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.data;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.android.popularmovies.BuildConfig;
@@ -26,6 +27,10 @@ import static com.example.android.popularmovies.data.TMDBConstants.TMDB_POSTER_B
 
 public class TMDBClient {
 
+    private static final String TAG = "TMDBClient";
+
+    private final boolean VERBOSE_HTTP_LOGGING = false;
+
     private final TMDBApiService apiService;
 
     private final Picasso picasso;
@@ -34,17 +39,13 @@ public class TMDBClient {
 
         OkHttpClient.Builder apiClientBuilder = new OkHttpClient.Builder();
 
-        int apiCacheSize = 10 * 1024 * 1024; // 10 MiB
-        Cache apiCache = new Cache(new File(context.getCacheDir(), "apiCache"), apiCacheSize);
-        apiClientBuilder.cache(apiCache);
-
         OkHttpClient.Builder imagesClientBuilder = new OkHttpClient.Builder();
 
-        long imagesCacheSize = 50 * 1024 * 1024; // 50 MiB
+        long imagesCacheSize = 1024 * 1024 * 1024; // 1024 MiB
         Cache imagesCache = new Cache(new File(context.getCacheDir(), "imagesCache"), imagesCacheSize);
         imagesClientBuilder.cache(imagesCache);
 
-        if (BuildConfig.DEBUG) {
+        if (VERBOSE_HTTP_LOGGING) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             apiClientBuilder.addInterceptor(loggingInterceptor);
@@ -70,6 +71,8 @@ public class TMDBClient {
                 page,
                 language);
         call.enqueue(callback);
+
+        Log.d(TAG, "loadPopularMoviesPage: ");
     }
 
     public void loadTopRatedMoviesPage(int page, Callback<MoviesPage> callback, String language) {
@@ -86,6 +89,8 @@ public class TMDBClient {
 
     public void loadPoster(String posterPath, ImageView imageView, com.squareup.picasso.Callback callback) {
         picasso.cancelRequest(imageView);
+        imageView.clearAnimation();
+        imageView.setImageDrawable(null);
         picasso.load(TMDB_POSTER_BASE_URL + posterPath)
                 .error(R.drawable.ic_error)
                 .into(imageView, callback);

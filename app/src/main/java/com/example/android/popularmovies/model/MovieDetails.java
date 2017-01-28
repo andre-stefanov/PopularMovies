@@ -17,7 +17,7 @@ public class MovieDetails {
 
     @SerializedName("belongs_to_collection")
     @Expose
-    private BelongsToCollection belongsToCollection;
+    private Collection collection;
 
     @SerializedName("budget")
     @Expose
@@ -123,12 +123,12 @@ public class MovieDetails {
         this.backdropPath = backdropPath;
     }
 
-    public BelongsToCollection getBelongsToCollection() {
-        return belongsToCollection;
+    public Collection getCollection() {
+        return collection;
     }
 
-    public void setBelongsToCollection(BelongsToCollection belongsToCollection) {
-        this.belongsToCollection = belongsToCollection;
+    public void setCollection(Collection collection) {
+        this.collection = collection;
     }
 
     public Integer getBudget() {
