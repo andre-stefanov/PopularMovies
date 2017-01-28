@@ -47,7 +47,7 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         }
     }
 
-    static class MovieImageViewHolder extends RecyclerView.ViewHolder {
+    private static class MovieImageViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         final ImageView mImageView;
 
@@ -61,7 +61,7 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
     private ArrayList<Movie> movies;
 
-    MoviesGridAdapter(Context context, TMDBClient client, View.OnClickListener clickListener) {
+    MoviesGridAdapter(final Context context, TMDBClient client, View.OnClickListener clickListener) {
         this.context = context;
         this.client = client;
         this.movies = new ArrayList<>();
@@ -95,8 +95,6 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
             viewHolder.mImageView.startAnimation(animation);
-        } else {
-            loadMoreMovies();
         }
     }
 
@@ -122,12 +120,12 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         }
     }
 
-    private void loadMoreMovies() {
+    public void loadMoreMovies(int page) {
         String currentFilter = preferences.getString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
         if (currentFilter.equals(MOVIES_FILTER_POPULAR)) {
-            client.loadPopularMoviesPage(movies.size() / 20 + 1, this, Locale.getDefault().getLanguage());
+            client.loadPopularMoviesPage(page, this, Locale.getDefault().getLanguage());
         } else if (currentFilter.equals(MOVIES_FILTER_TOP_RATED)) {
-            client.loadTopRatedMoviesPage(movies.size() / 20 + 1, this, Locale.getDefault().getLanguage());
+            client.loadTopRatedMoviesPage(page, this, Locale.getDefault().getLanguage());
         }
     }
 
@@ -145,8 +143,9 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(KEY_MOVIES_FILTER_KEY)) {
+            Log.d(TAG, "onSharedPreferenceChanged: clear data");
             movies.clear();
-            loadMoreMovies();
+            notifyDataSetChanged();
         }
     }
 }

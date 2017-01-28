@@ -66,16 +66,16 @@ public class TMDBClient {
     }
 
     public void loadPopularMoviesPage(int page, Callback<MoviesPage> callback, String language) {
+        Log.d(TAG, "loadPopularMoviesPage: " + page);
         Call<MoviesPage> call = this.apiService.loadPopularMoviesPage(
                 BuildConfig.TMBD_API_KEY,
                 page,
                 language);
         call.enqueue(callback);
-
-        Log.d(TAG, "loadPopularMoviesPage: ");
     }
 
     public void loadTopRatedMoviesPage(int page, Callback<MoviesPage> callback, String language) {
+        Log.d(TAG, "loadTopRatedMoviesPage: " + page);
         Call<MoviesPage> call = this.apiService.loadTopRatedMoviesPage(
                 BuildConfig.TMBD_API_KEY,
                 page,
