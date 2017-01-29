@@ -77,7 +77,7 @@ class MoviesGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         LayoutInflater inflater = LayoutInflater.from(context);
         if (viewType == VIEW_TYPE_MOVIE) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.image_view_movie, parent, false);
+                    .inflate(R.layout.image_view_poster, parent, false);
             v.setOnClickListener(clickListener);
             return new MovieImageViewHolder(v);
         } else {

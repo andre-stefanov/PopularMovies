@@ -7,6 +7,7 @@ if (!project.hasProperty('tmdbApiKey')) {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 android {
@@ -42,6 +43,14 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:cardview-v7:25.1.0'
+
+    compile('com.mikepenz:fastadapter:2.1.6@aar') {
+        transitive = true
+    }
+    compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
+    compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
+    compile 'com.mikepenz:materialize:1.0.0@aar'
+    compile "com.mikepenz:itemanimators:0.5.0@aar"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'

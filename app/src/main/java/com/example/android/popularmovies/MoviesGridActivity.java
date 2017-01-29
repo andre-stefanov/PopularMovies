@@ -17,19 +17,32 @@ import android.view.animation.AnimationUtils;
 
 import com.example.android.popularmovies.data.TMDBClient;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.MoviesPage;
 import com.example.android.popularmovies.utils.DefaultAnimationListener;
-import com.example.android.popularmovies.utils.EndlessRecyclerViewScrollListener;
 import com.github.clans.fab.FloatingActionMenu;
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter_extensions.items.ProgressItem;
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
+import com.mikepenz.itemanimators.AlphaCrossFadeAnimator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import static com.example.android.popularmovies.MoviesGridAdapter.VIEW_TYPE_PROGRESS;
 import static com.example.android.popularmovies.Preferences.KEY_MOVIES_FILTER_KEY;
 import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_POPULAR;
 import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_TOP_RATED;
 
-public class MoviesGridActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MoviesGridActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Callback<MoviesPage> {
 
     private static final String TAG = "MoviesGridActivity";
 
@@ -39,11 +52,13 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
     @BindView(R.id.fab)
     FloatingActionMenu fabMenu;
 
+    private FastItemAdapter<MovieGridItem> adapter;
+
+    private FooterAdapter<ProgressItem> footerAdapter;
+
     private SharedPreferences sharedPreferences;
 
-    private MoviesGridAdapter moviesAdapter;
-
-    private EndlessRecyclerViewScrollListener scrollListener;
+    private TMDBClient tmdbClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,27 +66,54 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         setContentView(R.layout.activity_movies_grid);
         ButterKnife.bind(this);
 
-        TMDBClient tmdbClient = new TMDBClient(this);
+        this.tmdbClient = new TMDBClient(this);
 
         this.sharedPreferences = getSharedPreferences(Preferences.PREFS_FILE_NAME, MODE_PRIVATE);
         this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        recyclerView.setItemAnimator(new AlphaCrossFadeAnimator());
         recyclerView.setHasFixedSize(true);
-        recyclerView.getItemAnimator().setChangeDuration(0);
 
-        this.moviesAdapter = new MoviesGridAdapter(this, tmdbClient, new View.OnClickListener() {
+        GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(20) {
             @Override
-            public void onClick(View posterView) {
-                Movie movie = (Movie) posterView.getTag();
+            public void onLoadMore(int currentPage) {
+                loadMoreMovies(currentPage);
+            }
+        });
 
+        this.adapter = new FastItemAdapter<>();
+        this.footerAdapter = new FooterAdapter<>();
+        recyclerView.setAdapter(footerAdapter.wrap(adapter));
+
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch (footerAdapter.getItemViewType(position)) {
+                    case R.id.movie_grid_item_id:
+                        return 1;
+                    default:
+                        return 2;
+                }
+            }
+        });
+
+        footerAdapter.add(new ProgressItem().withEnabled(true));
+
+        adapter.withSelectable(true);
+        adapter.withOnClickListener(new FastAdapter.OnClickListener<MovieGridItem>() {
+            @Override
+            public boolean onClick(View v, IAdapter<MovieGridItem> adapter, MovieGridItem item, int position) {
                 final Intent intent = new Intent(MoviesGridActivity.this, MovieDetailsActivity.class);
-                intent.putExtra(MovieDetailsActivity.MOVIE_PARCELABLE_EXTRA, movie);
+                intent.putExtra(MovieDetailsActivity.MOVIE_PARCELABLE_EXTRA, item.movie);
 
                 View decor = getWindow().getDecorView();
                 View statusBar = decor.findViewById(android.R.id.statusBarBackground);
                 View navBar = decor.findViewById(android.R.id.navigationBarBackground);
 
-                Pair<View, String> p1 = Pair.create(posterView, "poster");
+                Pair<View, String> p1 = Pair.create(v, "poster");
                 Pair<View, String> p2 = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
                 Pair<View, String> p3 = Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
 
@@ -90,31 +132,11 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                 });
                 fabMenu.setMenuButtonHideAnimation(animation);
                 fabMenu.hideMenuButton(true);
+                return true;
             }
         });
-        recyclerView.setAdapter(moviesAdapter);
 
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                switch (moviesAdapter.getItemViewType(position)) {
-                    case VIEW_TYPE_PROGRESS:
-                        return getResources().getInteger(R.integer.grid_columns);
-                    default:
-                        return 1;
-                }
-            }
-        });
-        recyclerView.setLayoutManager(layoutManager);
-
-        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView recyclerView) {
-                moviesAdapter.loadMoreMovies(page);
-            }
-        };
-        recyclerView.addOnScrollListener(scrollListener);
+        loadMoreMovies(1);
 
         this.fabMenu = (FloatingActionMenu) findViewById(R.id.fab);
         this.fabMenu.setClosedOnTouchOutside(true);
@@ -173,8 +195,32 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(KEY_MOVIES_FILTER_KEY)) {
-            Log.d(TAG, "onSharedPreferenceChanged: reset scrollListener state");
-            scrollListener.resetState();
+            adapter.clear();
         }
+    }
+
+    public void loadMoreMovies(int page) {
+
+        String currentFilter = sharedPreferences.getString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
+
+        if (currentFilter.equals(MOVIES_FILTER_POPULAR)) {
+            tmdbClient.loadPopularMoviesPage(page, this, Locale.getDefault().getLanguage());
+        } else if (currentFilter.equals(MOVIES_FILTER_TOP_RATED)) {
+            tmdbClient.loadTopRatedMoviesPage(page, this, Locale.getDefault().getLanguage());
+        }
+    }
+
+    @Override
+    public void onResponse(Call<MoviesPage> call, Response<MoviesPage> response) {
+        List<MovieGridItem> results = new ArrayList<>();
+        for (Movie movie : response.body().getResults()) {
+            results.add(new MovieGridItem(movie));
+        }
+        adapter.add(results);
+    }
+
+    @Override
+    public void onFailure(Call<MoviesPage> call, Throwable t) {
+        Log.e(TAG, "onFailure: ", t);
     }
 }

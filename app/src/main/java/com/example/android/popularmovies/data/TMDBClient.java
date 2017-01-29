@@ -8,13 +8,10 @@ import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.model.MovieDetails;
 import com.example.android.popularmovies.model.MoviesPage;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.Locale;
 
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -39,17 +36,10 @@ public class TMDBClient {
 
         OkHttpClient.Builder apiClientBuilder = new OkHttpClient.Builder();
 
-        OkHttpClient.Builder imagesClientBuilder = new OkHttpClient.Builder();
-
-        long imagesCacheSize = 1024 * 1024 * 1024; // 1024 MiB
-        Cache imagesCache = new Cache(new File(context.getCacheDir(), "imagesCache"), imagesCacheSize);
-        imagesClientBuilder.cache(imagesCache);
-
         if (VERBOSE_HTTP_LOGGING) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             apiClientBuilder.addInterceptor(loggingInterceptor);
-            imagesClientBuilder.addInterceptor(loggingInterceptor);
         }
 
         OkHttpClient apiOkHttpClient = apiClientBuilder.build();
@@ -60,9 +50,7 @@ public class TMDBClient {
                 .build();
         this.apiService = retrofit.create(TMDBApiService.class);
 
-        OkHttpClient imagesOkHttpClient = imagesClientBuilder.build();
-        OkHttp3Downloader okHttpDownloader = new OkHttp3Downloader(imagesOkHttpClient);
-        this.picasso = new Picasso.Builder(context).downloader(okHttpDownloader).build();
+        this.picasso = new Picasso.Builder(context).build();
     }
 
     public void loadPopularMoviesPage(int page, Callback<MoviesPage> callback, String language) {
