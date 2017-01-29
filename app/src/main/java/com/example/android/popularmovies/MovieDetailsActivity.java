@@ -25,6 +25,9 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "MovieDetailsActivity";
@@ -33,13 +36,32 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private TMDBClient tmdbClient;
 
-    private ImageView backdropImageView;
-    private TextView titleTextView;
-    private ImageView posterImageView;
-    private TextView overviewTextView;
-    private TextView yearTextView;
-    private TextView votesTextView;
-    private FloatingActionButton fab;
+    @BindView(R.id.main_appbar)
+    AppBarLayout appBarLayout;
+
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.main_backdrop)
+    ImageView backdropImageView;
+
+    @BindView(R.id.textview_title)
+    TextView titleTextView;
+
+    @BindView(R.id.imageview_poster)
+    ImageView posterImageView;
+
+    @BindView(R.id.textview_overview)
+    TextView overviewTextView;
+
+    @BindView(R.id.textview_release)
+    TextView releaseTextView;
+
+    @BindView(R.id.textview_votes)
+    TextView votesTextView;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     private boolean showFabPending = true;
 
@@ -47,8 +69,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+        ButterKnife.bind(this);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -58,16 +80,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        backdropImageView = (ImageView) findViewById(R.id.main_backdrop);
-        titleTextView = (TextView) findViewById(R.id.textview_title);
-        posterImageView = (ImageView) findViewById(R.id.imageview_poster);
-        overviewTextView = (TextView) findViewById(R.id.textview_overview);
-        yearTextView = (TextView) findViewById(R.id.textview_release);
-        votesTextView = (TextView) findViewById(R.id.textview_votes);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -101,7 +113,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 titleTextView.setText(String.format(Locale.ENGLISH, "%s (%s)", movie.getTitle(), year));
                 overviewTextView.setText(movie.getOverview());
-                yearTextView.setText(localizedReleaseDate);
+                releaseTextView.setText(localizedReleaseDate);
                 votesTextView.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movie.getVoteAverage(), movie.getVoteCount()));
 
                 tmdbClient.loadBackdrop(movie.getBackdropPath(), backdropImageView);

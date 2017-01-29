@@ -21,6 +21,9 @@ import com.example.android.popularmovies.utils.DefaultAnimationListener;
 import com.example.android.popularmovies.utils.EndlessRecyclerViewScrollListener;
 import com.github.clans.fab.FloatingActionMenu;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.example.android.popularmovies.MoviesGridAdapter.VIEW_TYPE_PROGRESS;
 import static com.example.android.popularmovies.Preferences.KEY_MOVIES_FILTER_KEY;
 import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_POPULAR;
@@ -30,9 +33,13 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
 
     private static final String TAG = "MoviesGridActivity";
 
-    private SharedPreferences sharedPreferences;
+    @BindView(R.id.recycler_view_movies)
+    RecyclerView recyclerView;
 
-    private FloatingActionMenu fabMenu;
+    @BindView(R.id.fab)
+    FloatingActionMenu fabMenu;
+
+    private SharedPreferences sharedPreferences;
 
     private MoviesGridAdapter moviesAdapter;
 
@@ -42,15 +49,15 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_grid);
+        ButterKnife.bind(this);
 
         TMDBClient tmdbClient = new TMDBClient(this);
 
         this.sharedPreferences = getSharedPreferences(Preferences.PREFS_FILE_NAME, MODE_PRIVATE);
         this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        RecyclerView moviesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_movies);
-        moviesRecyclerView.setHasFixedSize(true);
-        moviesRecyclerView.getItemAnimator().setChangeDuration(0);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.getItemAnimator().setChangeDuration(0);
 
         this.moviesAdapter = new MoviesGridAdapter(this, tmdbClient, new View.OnClickListener() {
             @Override
@@ -85,7 +92,7 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                 fabMenu.hideMenuButton(true);
             }
         });
-        moviesRecyclerView.setAdapter(moviesAdapter);
+        recyclerView.setAdapter(moviesAdapter);
 
         final GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -99,16 +106,15 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                 }
             }
         });
-        moviesRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView recyclerView) {
-                Log.d(TAG, "onLoadMore() called with: page = [" + page + "], totalItemsCount = [" + totalItemsCount + "]");
                 moviesAdapter.loadMoreMovies(page);
             }
         };
-        moviesRecyclerView.addOnScrollListener(scrollListener);
+        recyclerView.addOnScrollListener(scrollListener);
 
         this.fabMenu = (FloatingActionMenu) findViewById(R.id.fab);
         this.fabMenu.setClosedOnTouchOutside(true);
