@@ -11,6 +11,18 @@ import java.util.List;
 
 public class Movie implements Parcelable {
 
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
@@ -66,6 +78,27 @@ public class Movie implements Parcelable {
     @SerializedName("vote_average")
     @Expose
     private Double voteAverage;
+
+    public Movie() {
+    }
+
+    private Movie(Parcel in) {
+        this.posterPath = in.readString();
+        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.overview = in.readString();
+        this.releaseDate = in.readString();
+        this.genreIds = new ArrayList<>();
+        in.readList(this.genreIds, Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.originalTitle = in.readString();
+        this.originalLanguage = in.readString();
+        this.title = in.readString();
+        this.backdropPath = in.readString();
+        this.popularity = (Double) in.readValue(Double.class.getClassLoader());
+        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
+    }
 
     public String getPosterPath() {
         return posterPath;
@@ -179,7 +212,6 @@ public class Movie implements Parcelable {
         this.voteAverage = voteAverage;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -202,37 +234,4 @@ public class Movie implements Parcelable {
         dest.writeValue(this.video);
         dest.writeValue(this.voteAverage);
     }
-
-    public Movie() {
-    }
-
-    protected Movie(Parcel in) {
-        this.posterPath = in.readString();
-        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.overview = in.readString();
-        this.releaseDate = in.readString();
-        this.genreIds = new ArrayList<>();
-        in.readList(this.genreIds, Integer.class.getClassLoader());
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.originalTitle = in.readString();
-        this.originalLanguage = in.readString();
-        this.title = in.readString();
-        this.backdropPath = in.readString();
-        this.popularity = (Double) in.readValue(Double.class.getClassLoader());
-        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 }

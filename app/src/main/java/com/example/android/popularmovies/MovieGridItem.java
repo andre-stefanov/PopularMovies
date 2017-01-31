@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridItem extends AbstractItem<MovieGridItem, MovieGridItem.ViewHolder> {
@@ -40,9 +42,9 @@ public class MovieGridItem extends AbstractItem<MovieGridItem, MovieGridItem.Vie
         super.bindView(holder, payloads);
 
         Picasso.with(holder.posterView.getContext())
-                .cancelRequest(holder.posterView);
-        Picasso.with(holder.posterView.getContext())
                 .load(TMDBConstants.TMDB_POSTER_BASE_URL + movie.getPosterPath())
+                .noFade()
+                .config(Bitmap.Config.RGB_565)
                 .into(holder.posterView);
     }
 
@@ -50,9 +52,10 @@ public class MovieGridItem extends AbstractItem<MovieGridItem, MovieGridItem.Vie
     public void unbindView(ViewHolder holder) {
         super.unbindView(holder);
 
-        holder.posterView.setImageDrawable(null);
         Picasso.with(holder.posterView.getContext())
                 .cancelRequest(holder.posterView);
+        holder.posterView.clearAnimation();
+        holder.posterView.setImageDrawable(null);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -84,6 +87,14 @@ public class MovieGridItem extends AbstractItem<MovieGridItem, MovieGridItem.Vie
     @Override
     public ViewHolderFactory<? extends ViewHolder> getFactory() {
         return FACTORY;
+    }
+
+    public static List<MovieGridItem> fromMovieList(List<Movie> movies) {
+        List<MovieGridItem> results = new ArrayList<>();
+        for (Movie movie : movies) {
+            results.add(new MovieGridItem(movie));
+        }
+        return results;
     }
 
 }

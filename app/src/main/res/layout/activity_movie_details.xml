@@ -16,7 +16,7 @@
             android:id="@+id/main_collapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
@@ -67,7 +67,10 @@
                     android:paddingEnd="64dp"
                     android:paddingStart="16dp"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"/>
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="64dp"/>
 
                 <ImageView
                     android:id="@+id/imageview_poster"
@@ -76,10 +79,13 @@
                     android:layout_height="240dp"
                     android:scaleType="fitCenter"
                     android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/textview_title"
-                    android:contentDescription="@string/poster" />
+                    android:contentDescription="@string/poster"
+                    android:layout_alignParentLeft="true"/>
 
                 <TextView
                     android:id="@+id/textview_release"
@@ -88,9 +94,10 @@
                     android:layout_alignTop="@id/imageview_poster"
                     android:layout_toEndOf="@id/imageview_poster"
                     android:drawableStart="@drawable/ic_date"
-                    android:drawableTint="@color/colorPrimaryText"
                     android:drawablePadding="8dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@id/imageview_poster"
+                    android:drawableLeft="@drawable/ic_date"/>
 
                 <TextView
                     android:id="@+id/textview_votes"
@@ -101,7 +108,9 @@
                     android:paddingTop="4dp"
                     android:gravity="center_vertical"
                     android:layout_below="@id/textview_release"
-                    android:layout_toEndOf="@id/imageview_poster"/>
+                    android:layout_toEndOf="@id/imageview_poster"
+                    android:layout_toRightOf="@id/imageview_poster"
+                    android:drawableLeft="@drawable/ic_star_filled"/>
 
             </RelativeLayout>
 
@@ -123,8 +132,8 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/main_appbar"
         app:layout_anchorGravity="bottom|end"
-        android:visibility="invisible"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:src="@drawable/ic_star_empty"
         app:fab_colorNormal="@color/colorTopRatedFab"/>
 

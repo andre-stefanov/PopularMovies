@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.example.android.popularmovies.data.TMDBClient;
-import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.MoviesPage;
 import com.example.android.popularmovies.utils.DefaultAnimationListener;
 import com.github.clans.fab.FloatingActionMenu;
@@ -28,10 +28,6 @@ import com.mikepenz.fastadapter_extensions.items.ProgressItem;
 import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
 import com.mikepenz.itemanimators.AlphaCrossFadeAnimator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -42,7 +38,7 @@ import static com.example.android.popularmovies.Preferences.KEY_MOVIES_FILTER_KE
 import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_POPULAR;
 import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_TOP_RATED;
 
-public class MoviesGridActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Callback<MoviesPage> {
+public class MoviesGridActivity extends AppCompatActivity implements Callback<MoviesPage> {
 
     private static final String TAG = "MoviesGridActivity";
 
@@ -69,7 +65,6 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         this.tmdbClient = new TMDBClient(this);
 
         this.sharedPreferences = getSharedPreferences(Preferences.PREFS_FILE_NAME, MODE_PRIVATE);
-        this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         recyclerView.setItemAnimator(new AlphaCrossFadeAnimator());
         recyclerView.setHasFixedSize(true);
@@ -77,16 +72,11 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         recyclerView.setLayoutManager(layoutManager);
 
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(20) {
-            @Override
-            public void onLoadMore(int currentPage) {
-                loadMoreMovies(currentPage);
-            }
-        });
-
         this.adapter = new FastItemAdapter<>();
         this.footerAdapter = new FooterAdapter<>();
-        recyclerView.setAdapter(footerAdapter.wrap(adapter));
+
+        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.recyclerView.setAdapter(footerAdapter.wrap(adapter));
 
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -95,12 +85,10 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                     case R.id.movie_grid_item_id:
                         return 1;
                     default:
-                        return 2;
+                        return getResources().getInteger(R.integer.grid_columns);
                 }
             }
         });
-
-        footerAdapter.add(new ProgressItem().withEnabled(true));
 
         adapter.withSelectable(true);
         adapter.withOnClickListener(new FastAdapter.OnClickListener<MovieGridItem>() {
@@ -130,19 +118,30 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                         startActivity(intent, options.toBundle());
                     }
                 });
+
                 fabMenu.setMenuButtonHideAnimation(animation);
                 fabMenu.hideMenuButton(true);
+
                 return true;
             }
         });
 
-        loadMoreMovies(1);
+        EndlessRecyclerOnScrollListener scrollListener = new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore(int currentPage) {
+                footerAdapter.clear();
+                footerAdapter.add(new ProgressItem().withEnabled(false));
+
+                loadMoreMovies(currentPage);
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
 
         this.fabMenu = (FloatingActionMenu) findViewById(R.id.fab);
         this.fabMenu.setClosedOnTouchOutside(true);
         this.fabMenu.setIconAnimated(false);
 
-        switch (sharedPreferences.getString(KEY_MOVIES_FILTER_KEY, Preferences.MOVIES_FILTER_POPULAR)) {
+        switch (getCurrentFIlter()) {
             case MOVIES_FILTER_POPULAR:
                 showMostPopular(null);
                 break;
@@ -150,13 +149,15 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
                 showTopRated(null);
                 break;
         }
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         this.fabMenu.showMenuButton(true);
+        if (adapter.getAdapterItemCount() == 0) {
+            loadMoreMovies(1);
+        }
     }
 
     public void showMostPopular(View view) {
@@ -165,7 +166,19 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         fabMenu.getMenuIconView().setImageResource(R.drawable.ic_whatshot);
         fabMenu.close(true);
 
-        setCurrentFilter(MOVIES_FILTER_POPULAR);
+        saveCurrentFilter(MOVIES_FILTER_POPULAR);
+
+        tmdbClient.loadPopularMoviesPage(1, new Callback<MoviesPage>() {
+            @Override
+            public void onResponse(Call<MoviesPage> call, Response<MoviesPage> response) {
+                adapter.setNewList(MovieGridItem.fromMovieList(response.body().getResults()));
+            }
+
+            @Override
+            public void onFailure(Call<MoviesPage> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
     }
 
     public void showTopRated(View view) {
@@ -174,11 +187,23 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         fabMenu.getMenuIconView().setImageResource(R.drawable.ic_star_filled);
         fabMenu.close(true);
 
-        setCurrentFilter(MOVIES_FILTER_TOP_RATED);
+        saveCurrentFilter(MOVIES_FILTER_TOP_RATED);
+
+        tmdbClient.loadTopRatedMoviesPage(1, new Callback<MoviesPage>() {
+            @Override
+            public void onResponse(Call<MoviesPage> call, Response<MoviesPage> response) {
+                adapter.setNewList(MovieGridItem.fromMovieList(response.body().getResults()));
+            }
+
+            @Override
+            public void onFailure(Call<MoviesPage> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
     }
 
     @SuppressLint("CommitPrefEdits")
-    private void setCurrentFilter(String filter) {
+    private void saveCurrentFilter(String filter) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_MOVIES_FILTER_KEY, filter);
         editor.commit();
@@ -192,35 +217,30 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
             super.onBackPressed();
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(KEY_MOVIES_FILTER_KEY)) {
-            adapter.clear();
-        }
-    }
-
     public void loadMoreMovies(int page) {
-
-        String currentFilter = sharedPreferences.getString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
-
-        if (currentFilter.equals(MOVIES_FILTER_POPULAR)) {
-            tmdbClient.loadPopularMoviesPage(page, this, Locale.getDefault().getLanguage());
-        } else if (currentFilter.equals(MOVIES_FILTER_TOP_RATED)) {
-            tmdbClient.loadTopRatedMoviesPage(page, this, Locale.getDefault().getLanguage());
+        switch (getCurrentFIlter()) {
+            case MOVIES_FILTER_POPULAR:
+                tmdbClient.loadPopularMoviesPage(page, this);
+                break;
+            case MOVIES_FILTER_TOP_RATED:
+                tmdbClient.loadTopRatedMoviesPage(page, this);
+                break;
+            default:
+                Log.w(TAG, "Unknown filter: " + getCurrentFIlter());
         }
     }
 
     @Override
     public void onResponse(Call<MoviesPage> call, Response<MoviesPage> response) {
-        List<MovieGridItem> results = new ArrayList<>();
-        for (Movie movie : response.body().getResults()) {
-            results.add(new MovieGridItem(movie));
-        }
-        adapter.add(results);
+        adapter.add(MovieGridItem.fromMovieList(response.body().getResults()));
     }
 
     @Override
     public void onFailure(Call<MoviesPage> call, Throwable t) {
         Log.e(TAG, "onFailure: ", t);
+    }
+
+    private String getCurrentFIlter() {
+        return sharedPreferences.getString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
     }
 }

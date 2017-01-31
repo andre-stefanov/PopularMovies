@@ -15,7 +15,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.example.android.popularmovies"
-        minSdkVersion 24
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -49,19 +49,14 @@ dependencies {
     }
     compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
     compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
-    compile 'com.mikepenz:materialize:1.0.0@aar'
     compile "com.mikepenz:itemanimators:0.5.0@aar"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 
-    compile 'com.jude:easyrecyclerview:4.3.7'
-    compile 'com.gordonwong:material-sheet-fab:1.2.1'
     compile 'com.github.clans:fab:1.6.4'
 
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:25.1.0'
 }

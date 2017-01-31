@@ -1,13 +1,10 @@
 package com.example.android.popularmovies;
 
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -16,12 +13,12 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.data.TMDBClient;
 import com.example.android.popularmovies.model.Movie;
-import com.example.android.popularmovies.utils.TransitionListenerAdapter;
 import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Callback;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -93,14 +90,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         tmdbClient = new TMDBClient(this);
 
-        postponeEnterTransition();
+        supportPostponeEnterTransition();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Movie movie = extras.getParcelable(MOVIE_PARCELABLE_EXTRA);
 
             if (movie != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 DateFormat localFormat = android.text.format.DateFormat.getLongDateFormat(this);
                 Date releaseDate = null;
                 try {
@@ -108,7 +105,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                String year = new SimpleDateFormat("yyyy").format(releaseDate);
+                String year = new SimpleDateFormat("yyyy", Locale.getDefault()).format(releaseDate);
                 String localizedReleaseDate = localFormat.format(releaseDate);
 
                 titleTextView.setText(String.format(Locale.ENGLISH, "%s (%s)", movie.getTitle(), year));
@@ -131,16 +128,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-        Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
-        sharedElementEnterTransition.addListener(new TransitionListenerAdapter() {
-            @Override
-            public void onTransitionEnd(@NonNull Transition transition) {
-                if (showFabPending) {
-                    fab.show(true);
-                    showFabPending = false;
-                }
-            }
-        });
+//        Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
+//        sharedElementEnterTransition.addListener(new TransitionPort.TransitionListenerAdapter() {
+//            @Override
+//            public void onTransitionEnd(@NonNull Transition transition) {
+//                if (showFabPending) {
+//                    fab.show(true);
+//                    showFabPending = false;
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -160,7 +157,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     @Override
                     public boolean onPreDraw() {
                         sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
-                        startPostponedEnterTransition();
+                        supportStartPostponedEnterTransition();
+                        fab.show(true);
                         return true;
                     }
                 });
