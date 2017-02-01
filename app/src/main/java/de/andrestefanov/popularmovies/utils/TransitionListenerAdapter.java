@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.utils;
+package de.andrestefanov.popularmovies.utils;
 
 import android.support.annotation.NonNull;
 import android.transition.Transition;

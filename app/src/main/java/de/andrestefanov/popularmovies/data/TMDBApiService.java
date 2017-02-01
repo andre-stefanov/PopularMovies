@@ -1,8 +1,7 @@
-package com.example.android.popularmovies.data;
+package de.andrestefanov.popularmovies.data;
 
-import com.example.android.popularmovies.model.MovieDetails;
-import com.example.android.popularmovies.model.MoviesPage;
-
+import de.andrestefanov.popularmovies.model.MovieDetails;
+import de.andrestefanov.popularmovies.model.MoviesPage;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

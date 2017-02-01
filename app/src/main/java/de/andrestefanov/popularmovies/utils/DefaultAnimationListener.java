@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.utils;
+package de.andrestefanov.popularmovies.utils;
 
 import android.view.animation.Animation;
 

@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package de.andrestefanov.popularmovies;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -11,8 +11,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.data.TMDBClient;
-import com.example.android.popularmovies.model.Movie;
 import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Callback;
 
@@ -24,6 +22,8 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.andrestefanov.popularmovies.data.TMDBClient;
+import de.andrestefanov.popularmovies.model.Movie;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 

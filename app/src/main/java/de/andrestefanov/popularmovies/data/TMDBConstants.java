@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.data;
+package de.andrestefanov.popularmovies.data;
 
 public class TMDBConstants {
 

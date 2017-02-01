@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package de.andrestefanov.popularmovies;
 
 public class Preferences {
 

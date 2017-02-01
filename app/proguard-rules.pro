@@ -15,4 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class io.codetail.animation.arcanimator.** { *; }
+#-dontwarn com.squareup.okhttp.**
+#-dontwarn java.nio.file.**
+#-dontwarn com.mikepenz.materialize.**
+#-dontwarn java.lang.invoke.**
+#-dontwarn org.codehaus.mojo.**

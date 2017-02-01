@@ -1,20 +1,19 @@
-package com.example.android.popularmovies.data;
+package de.andrestefanov.popularmovies.data;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.example.android.popularmovies.BuildConfig;
-import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.model.Movie;
-import com.example.android.popularmovies.model.MovieDetails;
-import com.example.android.popularmovies.model.MoviesPage;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.Locale;
 
+import de.andrestefanov.popularmovies.BuildConfig;
+import de.andrestefanov.popularmovies.model.Movie;
+import de.andrestefanov.popularmovies.model.MovieDetails;
+import de.andrestefanov.popularmovies.model.MoviesPage;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -22,9 +21,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.example.android.popularmovies.data.TMDBConstants.TMDB_BACKDROP_BASE_URL;
-import static com.example.android.popularmovies.data.TMDBConstants.TMDB_POSTER_BASE_URL;
 
 public class TMDBClient {
 
@@ -70,15 +66,15 @@ public class TMDBClient {
     }
 
     public void loadPoster(String posterPath, ImageView imageView, com.squareup.picasso.Callback callback) {
-        picasso.load(TMDB_POSTER_BASE_URL + posterPath)
-                .error(R.drawable.ic_error)
+        picasso.load(TMDBConstants.TMDB_POSTER_BASE_URL + posterPath)
+                .error(de.andrestefanov.popularmovies.R.drawable.ic_error)
                 .noFade()
                 .into(imageView, callback);
     }
 
     public void loadBackdrop(String backdropPath, ImageView imageView) {
         picasso.cancelRequest(imageView);
-        picasso.load(TMDB_BACKDROP_BASE_URL + backdropPath)
+        picasso.load(TMDBConstants.TMDB_BACKDROP_BASE_URL + backdropPath)
                 .into(imageView);
     }
 
@@ -128,7 +124,7 @@ public class TMDBClient {
         protected Boolean doInBackground(Void... params) {
             try {
                 for (Movie movie : response.body().getResults())
-                    picasso.load(TMDB_POSTER_BASE_URL + movie.getPosterPath())
+                    picasso.load(TMDBConstants.TMDB_POSTER_BASE_URL + movie.getPosterPath())
                             .config(Bitmap.Config.RGB_565)
                             .noFade()
                             .get();

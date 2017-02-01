@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package de.andrestefanov.popularmovies;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +15,6 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.example.android.popularmovies.data.TMDBClient;
-import com.example.android.popularmovies.model.MoviesPage;
-import com.example.android.popularmovies.utils.DefaultAnimationListener;
 import com.github.clans.fab.FloatingActionMenu;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
@@ -30,13 +26,12 @@ import com.mikepenz.itemanimators.AlphaCrossFadeAnimator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.andrestefanov.popularmovies.data.TMDBClient;
+import de.andrestefanov.popularmovies.model.MoviesPage;
+import de.andrestefanov.popularmovies.utils.DefaultAnimationListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.example.android.popularmovies.Preferences.KEY_MOVIES_FILTER_KEY;
-import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_POPULAR;
-import static com.example.android.popularmovies.Preferences.MOVIES_FILTER_TOP_RATED;
 
 public class MoviesGridActivity extends AppCompatActivity implements Callback<MoviesPage> {
 
@@ -75,7 +70,6 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
         this.adapter = new FastItemAdapter<>();
         this.footerAdapter = new FooterAdapter<>();
 
-        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
         this.recyclerView.setAdapter(footerAdapter.wrap(adapter));
 
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -142,10 +136,10 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
         this.fabMenu.setIconAnimated(false);
 
         switch (getCurrentFIlter()) {
-            case MOVIES_FILTER_POPULAR:
+            case Preferences.MOVIES_FILTER_POPULAR:
                 showMostPopular(null);
                 break;
-            case MOVIES_FILTER_TOP_RATED:
+            case Preferences.MOVIES_FILTER_TOP_RATED:
                 showTopRated(null);
                 break;
         }
@@ -166,7 +160,7 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
         fabMenu.getMenuIconView().setImageResource(R.drawable.ic_whatshot);
         fabMenu.close(true);
 
-        saveCurrentFilter(MOVIES_FILTER_POPULAR);
+        saveCurrentFilter(Preferences.MOVIES_FILTER_POPULAR);
 
         tmdbClient.loadPopularMoviesPage(1, new Callback<MoviesPage>() {
             @Override
@@ -187,7 +181,7 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
         fabMenu.getMenuIconView().setImageResource(R.drawable.ic_star_filled);
         fabMenu.close(true);
 
-        saveCurrentFilter(MOVIES_FILTER_TOP_RATED);
+        saveCurrentFilter(Preferences.MOVIES_FILTER_TOP_RATED);
 
         tmdbClient.loadTopRatedMoviesPage(1, new Callback<MoviesPage>() {
             @Override
@@ -205,7 +199,7 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
     @SuppressLint("CommitPrefEdits")
     private void saveCurrentFilter(String filter) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_MOVIES_FILTER_KEY, filter);
+        editor.putString(Preferences.KEY_MOVIES_FILTER_KEY, filter);
         editor.commit();
     }
 
@@ -219,10 +213,10 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
 
     public void loadMoreMovies(int page) {
         switch (getCurrentFIlter()) {
-            case MOVIES_FILTER_POPULAR:
+            case Preferences.MOVIES_FILTER_POPULAR:
                 tmdbClient.loadPopularMoviesPage(page, this);
                 break;
-            case MOVIES_FILTER_TOP_RATED:
+            case Preferences.MOVIES_FILTER_TOP_RATED:
                 tmdbClient.loadTopRatedMoviesPage(page, this);
                 break;
             default:
@@ -241,6 +235,6 @@ public class MoviesGridActivity extends AppCompatActivity implements Callback<Mo
     }
 
     private String getCurrentFIlter() {
-        return sharedPreferences.getString(KEY_MOVIES_FILTER_KEY, MOVIES_FILTER_POPULAR);
+        return sharedPreferences.getString(Preferences.KEY_MOVIES_FILTER_KEY, Preferences.MOVIES_FILTER_POPULAR);
     }
 }

@@ -1,18 +1,19 @@
-package com.example.android.popularmovies;
+package de.andrestefanov.popularmovies;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.android.popularmovies.data.TMDBConstants;
-import com.example.android.popularmovies.model.Movie;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.andrestefanov.popularmovies.data.TMDBConstants;
+import de.andrestefanov.popularmovies.model.Movie;
 
 public class MovieGridItem extends AbstractItem<MovieGridItem, MovieGridItem.ViewHolder> {
 
