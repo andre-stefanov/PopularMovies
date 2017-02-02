@@ -74,6 +74,7 @@
 
                 <ImageView
                     android:id="@+id/imageview_poster"
+                    android:transitionName="poster"
                     android:layout_width="160dp"
                     android:layout_height="240dp"
                     android:scaleType="fitCenter"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="Widget.MaterialSheetFab.Fab" parent="Widget.Design.FloatingActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/fab_spacing</item>
+        <item name="android:layout_marginBottom">@dimen/fab_spacing</item>
+        <item name="android:layout_marginLeft">@dimen/fab_spacing</item>
+        <item name="android:layout_marginRight">@dimen/fab_spacing</item>
+        <item name="android:elevation">@dimen/fab_elevation</item>
+        <item name="android:src">@drawable/ic_star_filled</item>
+        <item name="fabSize">normal</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+</resources>

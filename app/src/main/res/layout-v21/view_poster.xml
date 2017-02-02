@@ -11,6 +11,7 @@
         android:layout_height="0dp"
         app:layout_aspectRatio="66%"
         app:layout_widthPercent="100%"
+        android:transitionName="poster"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"

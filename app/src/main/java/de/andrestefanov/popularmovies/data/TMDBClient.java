@@ -22,6 +22,7 @@ public class TMDBClient {
 
     private static final String TAG = "TMDBClient";
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final boolean VERBOSE_HTTP_LOGGING = false;
 
     private final TMDBApiService apiService;
@@ -32,6 +33,7 @@ public class TMDBClient {
 
         OkHttpClient.Builder apiClientBuilder = new OkHttpClient.Builder();
 
+        //noinspection ConstantConditions
         if (VERBOSE_HTTP_LOGGING) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
