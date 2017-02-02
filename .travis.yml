@@ -8,5 +8,5 @@ android:
     - extra-android-m2repository
 
 script:
-  - jdk_switcher use oraclejdk7
+  - jdk_switcher use oraclejdk8
   - ./gradlew build connectedCheck
