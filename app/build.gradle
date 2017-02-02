@@ -8,6 +8,7 @@ if (!project.hasProperty('tmdbApiKey')) {
 repositories {
     mavenCentral()
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
@@ -61,13 +62,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:cardview-v7:25.1.0'
-    // FastAdapter
-    compile('com.mikepenz:fastadapter:2.1.6@aar') {
-        transitive = true
-    }
-    compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
-    compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
-    compile 'com.mikepenz:itemanimators:0.5.0@aar'
+    compile 'com.android.support:percent:25.1.0'
+
     // Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
     // Retrofit

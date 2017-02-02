@@ -1,24 +1,20 @@
 package de.andrestefanov.popularmovies.data;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import de.andrestefanov.popularmovies.BuildConfig;
-import de.andrestefanov.popularmovies.model.Movie;
 import de.andrestefanov.popularmovies.model.MovieDetails;
 import de.andrestefanov.popularmovies.model.MoviesPage;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -54,11 +50,23 @@ public class TMDBClient {
     }
 
     public void loadPopularMoviesPage(int page, final Callback<MoviesPage> callback) {
-        asyncLoadMoviesPageAndPosters(TMDBConstants.TMDB_POPULAR_MOVIES_PATH, page, callback);
+        Log.d(TAG, "loadPopularMoviesPage() called with: page = [" + page + "], callback = [" + callback + "]");
+        apiService.loadMoviesPage(
+                TMDBConstants.TMDB_POPULAR_MOVIES_PATH,
+                BuildConfig.TMBD_API_KEY,
+                page,
+                Locale.getDefault().getLanguage())
+                .enqueue(callback);
     }
 
     public void loadTopRatedMoviesPage(int page, final Callback<MoviesPage> callback) {
-        asyncLoadMoviesPageAndPosters(TMDBConstants.TMDB_TOP_RATED_MOVIES_PATH, page, callback);
+        Log.d(TAG, "loadTopRatedMoviesPage() called with: page = [" + page + "], callback = [" + callback + "]");
+        apiService.loadMoviesPage(
+                TMDBConstants.TMDB_TOP_RATED_MOVIES_PATH,
+                BuildConfig.TMBD_API_KEY,
+                page,
+                Locale.getDefault().getLanguage())
+                .enqueue(callback);
     }
 
     public void loadPoster(String posterPath, ImageView imageView) {
@@ -68,7 +76,6 @@ public class TMDBClient {
     public void loadPoster(String posterPath, ImageView imageView, com.squareup.picasso.Callback callback) {
         picasso.load(TMDBConstants.TMDB_POSTER_BASE_URL + posterPath)
                 .error(de.andrestefanov.popularmovies.R.drawable.ic_error)
-                .noFade()
                 .into(imageView, callback);
     }
 
@@ -84,63 +91,6 @@ public class TMDBClient {
                 BuildConfig.TMBD_API_KEY,
                 Locale.getDefault().getLanguage());
         call.enqueue(callback);
-    }
-
-    private void asyncLoadMoviesPageAndPosters(String path, int page, final Callback<MoviesPage> callback) {
-        Call<MoviesPage> call = apiService.loadMoviesPage(
-                path,
-                BuildConfig.TMBD_API_KEY,
-                page,
-                Locale.getDefault().getLanguage());
-        Callback<MoviesPage> tmp = new Callback<MoviesPage>() {
-            @Override
-            public void onResponse(Call<MoviesPage> call, Response<MoviesPage> response) {
-                new LoadPostersTask(call, response, callback).execute();
-            }
-
-            @Override
-            public void onFailure(Call<MoviesPage> call, Throwable t) {
-                callback.onFailure(call, t);
-            }
-        };
-        call.enqueue(tmp);
-    }
-
-    private class LoadPostersTask extends AsyncTask<Void, Void, Boolean> {
-
-        private Call<MoviesPage> call;
-
-        private Response<MoviesPage> response;
-
-        private Callback<MoviesPage> callback;
-
-        LoadPostersTask(Call<MoviesPage> call, Response<MoviesPage> response, Callback<MoviesPage> callback) {
-            this.call = call;
-            this.response = response;
-            this.callback = callback;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                for (Movie movie : response.body().getResults())
-                    picasso.load(TMDBConstants.TMDB_POSTER_BASE_URL + movie.getPosterPath())
-                            .config(Bitmap.Config.RGB_565)
-                            .noFade()
-                            .get();
-            } catch (IOException e) {
-                callback.onFailure(call, e);
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean succeeded) {
-            super.onPostExecute(succeeded);
-            if (succeeded)
-                callback.onResponse(call, response);
-        }
     }
 
 }

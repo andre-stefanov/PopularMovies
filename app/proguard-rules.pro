@@ -15,8 +15,41 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-#-dontwarn com.squareup.okhttp.**
-#-dontwarn java.nio.file.**
-#-dontwarn com.mikepenz.materialize.**
-#-dontwarn java.lang.invoke.**
-#-dontwarn org.codehaus.mojo.**
+
+# Picasso
+-dontwarn com.squareup.okhttp.**
+
+# Retrofit 2
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
+# OkHttp 3
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+#-dontwarn okio.**
+-dontwarn java.nio.file.**
+-dontwarn java.lang.invoke.**
+-dontwarn org.codehaus.mojo.**
+
+## GSON 2.2.4 specific rules ##
+
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
