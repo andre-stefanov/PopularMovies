@@ -12,7 +12,6 @@ import de.andrestefanov.popularmovies.BuildConfig;
 import de.andrestefanov.popularmovies.model.MovieDetails;
 import de.andrestefanov.popularmovies.model.MoviesPage;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -22,25 +21,12 @@ public class TMDBClient {
 
     private static final String TAG = "TMDBClient";
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private final boolean VERBOSE_HTTP_LOGGING = false;
-
     private final TMDBApiService apiService;
 
     private final Picasso picasso;
 
     public TMDBClient(Context context) {
-
-        OkHttpClient.Builder apiClientBuilder = new OkHttpClient.Builder();
-
-        //noinspection ConstantConditions
-        if (VERBOSE_HTTP_LOGGING) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            apiClientBuilder.addInterceptor(loggingInterceptor);
-        }
-
-        OkHttpClient apiOkHttpClient = apiClientBuilder.build();
+        OkHttpClient apiOkHttpClient = new OkHttpClient.Builder().build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(TMDBConstants.TMDB_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
