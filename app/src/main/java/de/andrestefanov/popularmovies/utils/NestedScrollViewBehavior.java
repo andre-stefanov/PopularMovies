@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * This class provides a workaround for the CollapsingToolbarLayout fling issue.
- * source: http://stackoverflow.com/a/40814431
+ * source: http://stackoverflow.com/a/40091360/1515907
  */
 public class NestedScrollViewBehavior extends AppBarLayout.Behavior {
 
