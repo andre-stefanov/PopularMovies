@@ -28,6 +28,7 @@ import static de.andrestefanov.popularmovies.Preferences.MOVIES_FILTER_TOP_RATED
 
 public class MoviesGridActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoviesAdapter.OnMovieClickListener {
 
+    @SuppressWarnings("unused")
     private static final String TAG = "MoviesGridActivity";
 
     @BindView(R.id.recycler_view_movies)
@@ -37,8 +38,6 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
     FloatingActionMenu fabMenu;
 
     private SharedPreferences sharedPreferences;
-
-    private MoviesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +53,10 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         recyclerView.setLayoutManager(layoutManager);
 
-        this.adapter = new MoviesAdapter(this);
+        MoviesAdapter adapter = new MoviesAdapter(this);
         this.recyclerView.setAdapter(adapter);
 
-        this.adapter.setClickListener(this);
+        adapter.setClickListener(this);
 
         this.fabMenu.setClosedOnTouchOutside(true);
         this.fabMenu.setIconAnimated(false);
@@ -123,18 +122,26 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         final Intent intent = new Intent(MoviesGridActivity.this, MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsActivity.MOVIE_PARCELABLE_EXTRA, movie);
 
-        View decor = getWindow().getDecorView();
-        View statusBar = decor.findViewById(android.R.id.statusBarBackground);
-        View navBar = decor.findViewById(android.R.id.navigationBarBackground);
+        Pair[] pairs;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            View decor = getWindow().getDecorView();
+            View statusBar = decor.findViewById(android.R.id.statusBarBackground);
+            View navBar = decor.findViewById(android.R.id.navigationBarBackground);
 
-        Pair<View, String> p1 = Pair.create((View) imageView, "poster");
-        Pair<View, String> p2 = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
-        Pair<View, String> p3 = Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+            Pair<View, String> p1 = Pair.create((View) imageView, "poster");
+            Pair<View, String> p2 = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
+            Pair<View, String> p3 = Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+
+            pairs = new Pair[]{p1, p2, p3};
+        } else {
+            Pair<View, String> p1 = Pair.create((View) imageView, "poster");
+            pairs = new Pair[]{p1};
+        }
 
         @SuppressWarnings("unchecked")
         final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 MoviesGridActivity.this,
-                p1, p2, p3);
+                pairs);
 
         Animation animation = AnimationUtils.loadAnimation(MoviesGridActivity.this, com.github.clans.fab.R.anim.fab_scale_down);
         animation.setAnimationListener(new DefaultAnimationListener() {

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="loading">Loading…</string>
     <string name="poster">Poster</string>
     <string name="backdrop_image">Backdrop image</string>
     <string name="most_popular">Most popular</string>
