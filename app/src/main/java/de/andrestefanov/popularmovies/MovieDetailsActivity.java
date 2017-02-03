@@ -2,6 +2,7 @@ package de.andrestefanov.popularmovies;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -24,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.data.TMDBClient;
 import de.andrestefanov.popularmovies.model.Movie;
+import de.andrestefanov.popularmovies.utils.NestedScrollViewBehavior;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -35,6 +38,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.main_appbar)
     AppBarLayout appBarLayout;
+
+    @BindView(R.id.linearlayout_content_container)
+    LinearLayout container;
 
     @BindView(R.id.main_toolbar)
     Toolbar toolbar;
@@ -67,6 +73,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        params.setBehavior(new NestedScrollViewBehavior());
 
         setSupportActionBar(toolbar);
 
