@@ -7,10 +7,6 @@ node {
         env.ANDROID_HOME = "${env.HOME}/android-sdk-linux"
     }
 
-    stage ('Test') {
-        sh './gradlew clean verify'
-    }
-
     stage ('Build') {
         try {
             sh './gradlew build'
