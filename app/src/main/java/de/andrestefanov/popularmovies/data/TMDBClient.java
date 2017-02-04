@@ -67,10 +67,10 @@ public class TMDBClient {
                 .into(imageView, callback);
     }
 
-    public void loadBackdrop(String backdropPath, ImageView imageView) {
+    public void loadBackdrop(String backdropPath, ImageView imageView, com.squareup.picasso.Callback callback) {
         picasso.cancelRequest(imageView);
         picasso.load(TMDBConstants.TMDB_BACKDROP_BASE_URL + backdropPath)
-                .into(imageView);
+                .into(imageView, callback);
     }
 
     public void loadMovieDetails(int movieId, Callback<MovieDetails> callback) {

@@ -17,6 +17,8 @@ import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.model.Movie;
@@ -109,7 +111,6 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
             super.onBackPressed();
     }
 
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(KEY_MOVIES_FILTER_KEY)) {
@@ -122,21 +123,25 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
         final Intent intent = new Intent(MoviesGridActivity.this, MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsActivity.MOVIE_PARCELABLE_EXTRA, movie);
 
-        Pair[] pairs;
+        ArrayList<Pair> pList = new ArrayList<>();
+        pList.add(Pair.create((View) imageView, "poster"));
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             View decor = getWindow().getDecorView();
             View statusBar = decor.findViewById(android.R.id.statusBarBackground);
             View navBar = decor.findViewById(android.R.id.navigationBarBackground);
 
-            Pair<View, String> p1 = Pair.create((View) imageView, "poster");
-            Pair<View, String> p2 = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
-            Pair<View, String> p3 = Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+            if (statusBar != null) {
+                pList.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+            }
 
-            pairs = new Pair[]{p1, p2, p3};
-        } else {
-            Pair<View, String> p1 = Pair.create((View) imageView, "poster");
-            pairs = new Pair[]{p1};
+            if (navBar != null) {
+                pList.add(Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+            }
         }
+
+        Pair[] pairs = new Pair[pList.size()];
+        pList.toArray(pairs);
 
         @SuppressWarnings("unchecked")
         final ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(

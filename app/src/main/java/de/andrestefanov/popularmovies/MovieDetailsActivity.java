@@ -3,6 +3,7 @@ package de.andrestefanov.popularmovies;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Callback;
 
 import java.text.DateFormat;
@@ -30,11 +30,10 @@ import de.andrestefanov.popularmovies.utils.NestedScrollViewBehavior;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
+    @SuppressWarnings("unused")
     private static final String TAG = "MovieDetailsActivity";
 
     public static final String MOVIE_PARCELABLE_EXTRA = "movie";
-
-    private TMDBClient tmdbClient;
 
     @BindView(R.id.main_appbar)
     AppBarLayout appBarLayout;
@@ -47,6 +46,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.main_backdrop)
     ImageView backdropImageView;
+
+    @BindView(R.id.progress)
+    ContentLoadingProgressBar progressBar;
 
     @BindView(R.id.textview_title)
     TextView titleTextView;
@@ -62,11 +64,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.textview_votes)
     TextView votesTextView;
-
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-
-    private boolean showFabPending = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,18 +83,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (appBarLayout.getHeight() / 2 < -verticalOffset) {
-                    fab.hide(true);
-                } else if (verticalOffset != 0) {
-                    fab.show(true);
-                }
-            }
-        });
-
-        tmdbClient = new TMDBClient(this);
+        TMDBClient tmdbClient = new TMDBClient(this);
 
         supportPostponeEnterTransition();
 
@@ -122,7 +108,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 releaseTextView.setText(localizedReleaseDate);
                 votesTextView.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movie.getVoteAverage(), movie.getVoteCount()));
 
-                tmdbClient.loadBackdrop(movie.getBackdropPath(), backdropImageView);
+                tmdbClient.loadBackdrop(movie.getBackdropPath(), backdropImageView, new Callback() {
+
+                    @Override
+                    public void onSuccess() {
+                        progressBar.hide();
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
                 tmdbClient.loadPoster(movie.getPosterPath(), posterImageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -137,23 +134,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-//        Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
-//        sharedElementEnterTransition.addListener(new TransitionPort.TransitionListenerAdapter() {
-//            @Override
-//            public void onTransitionEnd(@NonNull Transition transition) {
-//                if (showFabPending) {
-//                    fab.show(true);
-//                    showFabPending = false;
-//                }
-//            }
-//        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                fab.hide(true);
                 supportFinishAfterTransition();
                 return true;
         }
@@ -167,7 +153,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     public boolean onPreDraw() {
                         sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
                         supportStartPostponedEnterTransition();
-                        fab.show(true);
                         return true;
                     }
                 });
@@ -175,7 +160,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        fab.hide(true);
         super.onBackPressed();
     }
 }

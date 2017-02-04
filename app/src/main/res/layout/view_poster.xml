@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -11,11 +12,13 @@
         android:layout_height="0dp"
         app:layout_aspectRatio="66%"
         app:layout_widthPercent="100%"
+        android:transitionName="poster"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:contentDescription="@string/poster"/>
+        android:contentDescription="@string/poster"
+        tools:ignore="UnusedAttribute"/>
 
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progress"
