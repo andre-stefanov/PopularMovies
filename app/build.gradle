@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'com.github.triplet.play'
 
 if (!project.hasProperty('tmdbApiKey')) {
     throw new GradleException('no tmdbApiKey property found needed to acces the backend server. Please define this property (i.e. in ~.gradle/gradle.properties) and try to build again ')
@@ -62,6 +63,7 @@ dependencies {
 
     // Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
+
     // Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'

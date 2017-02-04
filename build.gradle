@@ -10,6 +10,9 @@ buildscript {
 
         // butterknife
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
+        // publisher
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
     }
 }
 
