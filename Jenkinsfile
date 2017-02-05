@@ -9,7 +9,11 @@ node {
 
     stage('Build') {
         try {
-            sh "./gradlew -PtmdbApiKey=$env.TMDB_API_KEY build"
+            withCredentials([usernameColonPassword(credentialsId: 'tmdb-api-key', variable: 'TMDB_API_KEY')]) {
+                sh '''
+                    ./gradlew -PtmdbApiKey=$TMDB_API_KEY build
+                '''
+            }
         } finally {
             step([$class: 'LintPublisher'])
         }
