@@ -12,7 +12,6 @@ node {
             sh "./gradlew -PtmdbApiKey=$System.env.TMDB_API_KEY build"
         } finally {
             step([$class: 'LintPublisher'])
-            step([$class: 'CheckStylePublisher', pattern: 'app/build/reports/checkstyle/checkstyle.xml', usePreviousBuildAsReference: true])
         }
     }
 }
