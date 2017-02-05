@@ -1,20 +1,18 @@
 node {
-    stage ('Checkout') {
+    stage('Checkout') {
         checkout scm
     }
 
-    stage ('Setup Environment') {
+    stage('Setup Environment') {
         env.ANDROID_HOME = "${env.HOME}/android-sdk-linux"
     }
 
-    stage ('Build') {
+    stage('Build') {
         try {
-            sh './gradlew build'
+            sh "./gradlew -PtmdbApiKey=$System.env.TMDB_API_KEY build"
         } finally {
             step([$class: 'LintPublisher'])
-            step(
-                    [$class                     : 'CheckStylePublisher', pattern: 'app/build/reports/checkstyle/checkstyle.xml',
-                     usePreviousBuildAsReference: true])
+            step([$class: 'CheckStylePublisher', pattern: 'app/build/reports/checkstyle/checkstyle.xml', usePreviousBuildAsReference: true])
         }
     }
 }
