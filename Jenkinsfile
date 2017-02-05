@@ -9,7 +9,7 @@ node {
 
     stage('Build') {
         try {
-            sh "./gradlew -PtmdbApiKey=$System.env.TMDB_API_KEY build"
+            sh "./gradlew -PtmdbApiKey=$env.TMDB_API_KEY build"
         } finally {
             step([$class: 'LintPublisher'])
         }
