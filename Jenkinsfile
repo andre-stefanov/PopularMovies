@@ -9,7 +9,7 @@ node {
 
     stage('Build') {
         try {
-            withCredentials([usernameColonPassword(credentialsId: 'tmdb-api-key', variable: 'TMDB_API_KEY')]) {
+            withCredentials([StringBinding(credentialsId: 'tmdb-api-key', variable: 'TMDB_API_KEY')]) {
                 sh '''
                     ./gradlew -PtmdbApiKey=$TMDB_API_KEY build
                 '''
