@@ -87,6 +87,11 @@ if (keystorePropertiesFile.canRead()) {
     android.signingConfigs.release.keyPassword = keystoreProperties['keyPassword']
     android.signingConfigs.release.storeFile = file(keystoreProperties['storeFile'])
     android.signingConfigs.release.storePassword = keystoreProperties['storePassword']
+} else if (project.hasProperty('keystoreFile')) {
+    android.signingConfigs.release.keyAlias = "$keystoreKeyAlias"
+    android.signingConfigs.release.keyPassword = "$keystoreKeyPassword"
+    android.signingConfigs.release.storeFile = file("$keystoreFile")
+    android.signingConfigs.release.storePassword = "$keystorePassword"
 } else {
     println 'keystore.properties not found'
     android.buildTypes.release.signingConfig = null

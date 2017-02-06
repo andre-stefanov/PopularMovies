@@ -18,9 +18,15 @@ node {
 
     stage('Build') {
         try {
-            withCredentials([[$class: 'StringBinding', credentialsId: 'tmdb-api-key', variable: 'TMDB_API_KEY']]) {
+            withCredentials([
+                    string(credentialsId: 'tmdb-api-key', variable: 'TMDB_API_KEY'),
+                    file(credentialsId: 'popular-movies-keystore', variable: 'storeFile'),
+                    string(credentialsId: 'popular-movies-keystore-password', variable: 'storePassword'),
+                    string(credentialsId: 'popular-movies-keystore-alias', variable: 'keyAlias'),
+                    string(credentialsId: 'popular-movies-alias-password', variable: 'keyPassword'),
+            ]) {
                 sh '''
-                    ./gradlew -PtmdbApiKey=$TMDB_API_KEY build
+                    ./gradlew -PtmdbApiKey=$TMDB_API_KEY -PstoreFile=storeFile -PstorePassword=storePassword -PkeyAlias=$keyAlias -PkeyPassword=$keyPassword build
                 '''
             }
         } finally {
