@@ -93,6 +93,6 @@ if (keystorePropertiesFile.canRead()) {
     android.signingConfigs.release.storeFile = file("$keystoreFile")
     android.signingConfigs.release.storePassword = "$keystorePassword"
 } else {
-    println 'keystore.properties not found'
+    println 'signing disabled'
     android.buildTypes.release.signingConfig = null
 }
