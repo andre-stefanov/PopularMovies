@@ -26,7 +26,7 @@ node {
                     string(credentialsId: 'popular-movies-alias-password', variable: 'keyPassword'),
             ]) {
                 sh '''
-                    ./gradlew -PtmdbApiKey=$TMDB_API_KEY -PstoreFile=storeFile -PstorePassword=storePassword -PkeyAlias=$keyAlias -PkeyPassword=$keyPassword build
+                    ./gradlew -PtmdbApiKey=$TMDB_API_KEY -PstoreFile=$storeFile -PstorePassword=$storePassword -PkeyAlias=$keyAlias -PkeyPassword=$keyPassword build
                 '''
             }
         } finally {
