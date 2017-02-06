@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Beliebte Filme</string>
-    <string name="loading">Lade…</string>
     <string name="poster">Poster</string>
     <string name="backdrop_image">Hintergrundbild</string>
     <string name="most_popular">Beliebteste</string>

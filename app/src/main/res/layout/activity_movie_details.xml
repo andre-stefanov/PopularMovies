@@ -2,35 +2,45 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/main_appbar"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:fitsSystemWindows="true">
+        android:layout_height="300dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/main_collapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp"
             >
 
-            <ImageView
-                android:id="@+id/main_backdrop"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:contentDescription="@string/backdrop_image"/>
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/main_backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/backdrop_image"/>
+
+                <android.support.v4.widget.ContentLoadingProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    style="?android:attr/android:progressBarStyle"/>
+
+            </FrameLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_toolbar"
@@ -45,10 +55,10 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fitsSystemWindows="true">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/linearlayout_content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -66,20 +76,27 @@
                     android:paddingBottom="16dp"
                     android:paddingEnd="64dp"
                     android:paddingStart="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="64dp"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"/>
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"/>
 
                 <ImageView
                     android:id="@+id/imageview_poster"
-                    android:transitionName="poster"
                     android:layout_width="160dp"
                     android:layout_height="240dp"
                     android:scaleType="fitCenter"
                     android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:transitionName="poster"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/textview_title"
-                    android:contentDescription="@string/poster" />
+                    android:contentDescription="@string/poster"
+                    android:layout_alignParentLeft="true"
+                    tools:ignore="UnusedAttribute"/>
 
                 <TextView
                     android:id="@+id/textview_release"
@@ -88,9 +105,10 @@
                     android:layout_alignTop="@id/imageview_poster"
                     android:layout_toEndOf="@id/imageview_poster"
                     android:drawableStart="@drawable/ic_date"
-                    android:drawableTint="@color/colorPrimaryText"
                     android:drawablePadding="8dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@id/imageview_poster"
+                    android:drawableLeft="@drawable/ic_date"/>
 
                 <TextView
                     android:id="@+id/textview_votes"
@@ -101,7 +119,9 @@
                     android:paddingTop="4dp"
                     android:gravity="center_vertical"
                     android:layout_below="@id/textview_release"
-                    android:layout_toEndOf="@id/imageview_poster"/>
+                    android:layout_toEndOf="@id/imageview_poster"
+                    android:layout_toRightOf="@id/imageview_poster"
+                    android:drawableLeft="@drawable/ic_star_filled"/>
 
             </RelativeLayout>
 
@@ -116,16 +136,5 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/main_appbar"
-        app:layout_anchorGravity="bottom|end"
-        android:visibility="invisible"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_star_empty"
-        app:fab_colorNormal="@color/colorTopRatedFab"/>
 
 </android.support.design.widget.CoordinatorLayout>
