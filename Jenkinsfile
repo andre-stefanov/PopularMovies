@@ -27,4 +27,8 @@ node {
             step([$class: 'LintPublisher'])
         }
     }
+
+    stage('Artifacts') {
+        archiveArtifacts artifacts: 'app/build/outputs/apk/*.apk', fingerprint: true
+    }
 }
