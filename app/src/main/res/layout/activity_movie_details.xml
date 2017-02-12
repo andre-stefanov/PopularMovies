@@ -55,7 +55,11 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp">
 
         <LinearLayout
             android:id="@+id/linearlayout_content_container"
@@ -65,32 +69,25 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:id="@+id/textview_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:paddingEnd="64dp"
-                    android:paddingStart="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="64dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"/>
+                    android:layout_alignParentLeft="true"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"/>
 
                 <ImageView
                     android:id="@+id/imageview_poster"
                     android:layout_width="160dp"
                     android:layout_height="240dp"
-                    android:scaleType="fitCenter"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:scaleType="centerCrop"
                     android:transitionName="poster"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/textview_title"
@@ -106,6 +103,11 @@
                     android:layout_toEndOf="@id/imageview_poster"
                     android:drawableStart="@drawable/ic_date"
                     android:drawablePadding="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="8dp"
                     android:gravity="center_vertical"
                     android:layout_toRightOf="@id/imageview_poster"
                     android:drawableLeft="@drawable/ic_date"/>
@@ -116,7 +118,11 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_star_filled"
                     android:drawablePadding="8dp"
-                    android:paddingTop="4dp"
+                    android:paddingStart="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="8dp"
                     android:gravity="center_vertical"
                     android:layout_below="@id/textview_release"
                     android:layout_toEndOf="@id/imageview_poster"
@@ -130,8 +136,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingBottom="8dp"
                 />
+
+            <FrameLayout
+                android:id="@+id/video_thumbnail_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/imageview_video_thumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    tools:ignore="UnusedAttribute"/>
+
+                <android.support.v4.widget.ContentLoadingProgressBar
+                    android:id="@+id/progress_video_thumbnail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    style="?android:attr/android:progressBarStyle"/>
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_play_circle"/>
+
+            </FrameLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/more_videos"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
