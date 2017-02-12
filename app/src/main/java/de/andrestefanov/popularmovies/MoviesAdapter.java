@@ -33,7 +33,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
         @BindView(R.id.imageview_poster)
         ImageView poster;
 
-        @BindView(R.id.progress)
+        @BindView(R.id.backdrop_progress)
         ContentLoadingProgressBar progress;
 
         MovieViewHolder(View itemView) {

@@ -121,7 +121,7 @@ public class MoviesGridActivity extends AppCompatActivity implements SharedPrefe
     @Override
     public void onClick(ImageView imageView, Movie movie) {
         final Intent intent = new Intent(MoviesGridActivity.this, MovieDetailsActivity.class);
-        intent.putExtra(MovieDetailsActivity.MOVIE_PARCELABLE_EXTRA, movie);
+        intent.putExtra(MovieDetailsActivity.ARG_MOVIE, movie);
 
         ArrayList<Pair> pList = new ArrayList<>();
         pList.add(Pair.create((View) imageView, "poster"));

@@ -4,5 +4,6 @@
     <string name="backdrop_image">Backdrop image</string>
     <string name="most_popular">Most popular</string>
     <string name="top_rated">Highest rated</string>
-    <string name="more_videos">More videos</string>
+    <string name="movie_overview">Overview</string>
+    <string name="movie_videos">Videos</string>
 </resources>
