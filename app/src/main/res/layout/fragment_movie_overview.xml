@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearlayout_content_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:id="@+id/imageview_movie_poster"
+                android:layout_width="160dp"
+                android:layout_height="240dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/poster"
+                android:scaleType="centerCrop"
+                android:transitionName="poster"
+                tools:ignore="UnusedAttribute"/>
+
+            <TextView
+                android:id="@+id/textview_movie_release"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageview_movie_poster"
+                android:layout_toEndOf="@id/imageview_movie_poster"
+                android:layout_toRightOf="@id/imageview_movie_poster"
+                android:drawableLeft="@drawable/ic_date"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_date"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="0dp"
+                android:paddingStart="8dp"/>
+
+            <TextView
+                android:id="@+id/textview_votes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textview_movie_release"
+                android:layout_toEndOf="@id/imageview_movie_poster"
+                android:layout_toRightOf="@id/imageview_movie_poster"
+                android:drawableLeft="@drawable/ic_star_filled"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_star_filled"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="0dp"
+                android:paddingStart="8dp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textview_movie_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:textSize="20sp"
+            />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

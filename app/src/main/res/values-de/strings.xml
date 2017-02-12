@@ -4,4 +4,6 @@
     <string name="backdrop_image">Hintergrundbild</string>
     <string name="most_popular">Beliebteste</string>
     <string name="top_rated">Bestbewertet</string>
+    <string name="movie_overview">Überblick</string>
+    <string name="movie_videos">Trailer</string>
 </resources>
