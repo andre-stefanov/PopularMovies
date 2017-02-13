@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,7 +38,6 @@ import de.andrestefanov.popularmovies.data.TMDBClient;
 import de.andrestefanov.popularmovies.data.YouTubeClient;
 import de.andrestefanov.popularmovies.model.Movie;
 import de.andrestefanov.popularmovies.model.Video;
-import de.andrestefanov.popularmovies.utils.NestedScrollViewBehavior;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,9 +72,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
-
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        params.setBehavior(new NestedScrollViewBehavior());
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTouchListener(new View.OnTouchListener() {
