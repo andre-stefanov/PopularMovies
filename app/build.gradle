@@ -51,27 +51,27 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    // Butterknife
-    compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    // android support
+
+    // android support library
     compile 'com.android.support:design:25.1.1'
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.android.support:recyclerview-v7:25.1.1'
     compile 'com.android.support:cardview-v7:25.1.1'
     compile 'com.android.support:percent:25.1.1'
 
-    // Multiline collapsible toolbar
+    // view binding
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    // multiline collapsible toolbar
     compile 'net.opacapp:multiline-collapsingtoolbar:1.3.1'
 
-    // Picasso
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
-    // Retrofit
+    // network
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
-    // FAB
+    // floating action button
     compile 'com.github.clans:fab:1.6.4'
 }
 

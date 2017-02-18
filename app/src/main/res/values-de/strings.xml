@@ -6,4 +6,5 @@
     <string name="top_rated">Bestbewertet</string>
     <string name="movie_overview">Überblick</string>
     <string name="movie_videos">Trailer</string>
+    <string name="movie_trailer_image">Filmtrailer Vorschaubild</string>
 </resources>

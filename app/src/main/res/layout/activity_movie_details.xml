@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:minHeight="150dp"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" >
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap" >
 
             <FrameLayout
                 android:id="@+id/backdrop_container"
