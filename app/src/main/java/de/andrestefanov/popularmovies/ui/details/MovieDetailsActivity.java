@@ -1,4 +1,4 @@
-package de.andrestefanov.popularmovies.ui.main;
+package de.andrestefanov.popularmovies.ui.details;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,14 +38,6 @@ import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.Video;
-import de.andrestefanov.popularmovies.ui.details.MovieBackdropMvpView;
-import de.andrestefanov.popularmovies.ui.details.MovieBackdropPresenter;
-import de.andrestefanov.popularmovies.ui.details.MovieOverviewMvpView;
-import de.andrestefanov.popularmovies.ui.details.MovieOverviewPresenter;
-import de.andrestefanov.popularmovies.ui.details.MovieReviewMvpView;
-import de.andrestefanov.popularmovies.ui.details.MovieVideosMvpView;
-import de.andrestefanov.popularmovies.ui.details.ReviewsPresenter;
-import de.andrestefanov.popularmovies.ui.details.VideosPresenter;
 
 public class MovieDetailsActivity extends AppCompatActivity implements MovieBackdropMvpView {
 
@@ -71,6 +63,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
 
     @BindView(R.id.tabs)
     TabLayout tabLayout;
+
+    MovieBackdropPresenter<MovieBackdropMvpView> backdropPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +92,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
             viewPager.setAdapter(new MovieDetailsPagerAdapter(getSupportFragmentManager(), this, movie));
 
             if (movie != null) {
-                MovieBackdropPresenter<MovieBackdropMvpView> backdropPresenter = new MovieBackdropPresenter<>(movie.getBackdropPath());
+                backdropPresenter = new MovieBackdropPresenter<>(movie.getBackdropPath());
                 backdropPresenter.onAttach(this);
 
                 toolbar.setTitle(movie.getTitle());

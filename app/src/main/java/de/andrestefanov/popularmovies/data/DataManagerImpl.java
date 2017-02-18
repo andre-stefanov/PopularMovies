@@ -52,12 +52,12 @@ public class DataManagerImpl implements DataManager {
 
     @Override
     public void loadBackdrop(String backdropPath, ImageView imageView) {
-        mApiHelper.loadPoster(backdropPath, imageView);
+        mApiHelper.loadBackdrop(backdropPath, imageView);
     }
 
     @Override
     public void loadBackdrop(String backdropPath, ImageView imageView, Callback callback) {
-        mApiHelper.loadPoster(backdropPath, imageView, callback);
+        mApiHelper.loadBackdrop(backdropPath, imageView, callback);
     }
 
     @Override

@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
+import de.andrestefanov.popularmovies.ui.details.MovieDetailsActivity;
 import de.andrestefanov.popularmovies.utils.DefaultAnimationListener;
 
 public class MoviesGridActivity extends AppCompatActivity implements MoviesMvpView, MoviesAdapter.OnMovieClickListener, MoviesAdapter.OnMoreDataRequestListener {

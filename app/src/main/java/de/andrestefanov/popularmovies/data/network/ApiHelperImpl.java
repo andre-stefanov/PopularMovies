@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -13,10 +14,11 @@ import java.util.Locale;
 
 import de.andrestefanov.popularmovies.BuildConfig;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
-import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.utils.Constants;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,16 +30,25 @@ public class ApiHelperImpl implements ApiHelper {
     private Picasso picasso;
 
     public ApiHelperImpl(Context context) {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(new TypeToken<List<Movie>>(){}.getType(), new MovieListDeserializer())
                 .registerTypeAdapter(new TypeToken<List<Video>>(){}.getType(), new VideoListDeserializer())
                 .create();
         tmdbRestApiService = new Retrofit.Builder()
+                .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(Constants.TMDB_BASE_URL)
                 .build()
                 .create(TMDBRestApiService.class);
-        picasso = Picasso.with(context);
+        picasso = new Picasso.Builder(context)
+                .downloader(new OkHttp3Downloader(httpClient))
+                .build();
     }
 
     @Override
@@ -95,6 +106,6 @@ public class ApiHelperImpl implements ApiHelper {
 
     @Override
     public void loadMovieReviews(int movieId, int page, Callback<ReviewsPage> callback) {
-        tmdbRestApiService.getMovieReviews(movieId, BuildConfig.TMBD_API_KEY, "en-US", page).enqueue(callback);
+        tmdbRestApiService.getMovieReviews(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage(), page).enqueue(callback);
     }
 }
