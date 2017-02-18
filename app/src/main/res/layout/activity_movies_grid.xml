@@ -6,7 +6,7 @@
     android:id="@+id/activity_movies_grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.andrestefanov.popularmovies.MoviesGridActivity">
+    tools:context="de.andrestefanov.popularmovies.ui.MoviesGridActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_movies"

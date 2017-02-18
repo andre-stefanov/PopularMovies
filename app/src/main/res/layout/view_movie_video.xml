@@ -10,10 +10,11 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/video_thumbnail"
+        android:contentDescription="@string/movie_trailer_image"
         android:layout_width="74dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"

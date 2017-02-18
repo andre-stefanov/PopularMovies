@@ -20,7 +20,7 @@
         android:contentDescription="@string/poster"
         tools:ignore="UnusedAttribute"/>
 
-    <android.support.v4.widget.ContentLoadingProgressBar
+    <ProgressBar
         android:id="@+id/backdrop_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
