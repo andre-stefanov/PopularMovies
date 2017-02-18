@@ -1,7 +1,6 @@
-package de.andrestefanov.popularmovies.ui;
+package de.andrestefanov.popularmovies.ui.main;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -25,9 +24,6 @@ import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
-import de.andrestefanov.popularmovies.ui.main.MoviesMvpPresenter;
-import de.andrestefanov.popularmovies.ui.main.MoviesMvpView;
-import de.andrestefanov.popularmovies.ui.main.MoviesPresenter;
 import de.andrestefanov.popularmovies.utils.DefaultAnimationListener;
 
 public class MoviesGridActivity extends AppCompatActivity implements MoviesMvpView, MoviesAdapter.OnMovieClickListener, MoviesAdapter.OnMoreDataRequestListener {

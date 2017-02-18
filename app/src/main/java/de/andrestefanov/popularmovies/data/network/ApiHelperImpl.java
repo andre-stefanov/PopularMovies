@@ -13,6 +13,8 @@ import java.util.Locale;
 
 import de.andrestefanov.popularmovies.BuildConfig;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.data.network.model.Review;
+import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.utils.Constants;
 import retrofit2.Callback;
@@ -89,5 +91,10 @@ public class ApiHelperImpl implements ApiHelper {
     @Override
     public void loadVideoImage(String videoKey, ImageView imageView, com.squareup.picasso.Callback callback) {
         picasso.load(String.format(Constants.YT_IMAGE_URL_TMPL, videoKey)).into(imageView, callback);
+    }
+
+    @Override
+    public void loadMovieReviews(int movieId, int page, Callback<ReviewsPage> callback) {
+        tmdbRestApiService.getMovieReviews(movieId, BuildConfig.TMBD_API_KEY, "en-US", page).enqueue(callback);
     }
 }

@@ -7,4 +7,5 @@
     <string name="movie_overview">Overview</string>
     <string name="movie_videos">Videos</string>
     <string name="movie_trailer_image">Movie trailer image</string>
+    <string name="movie_reviews">Reviews</string>
 </resources>

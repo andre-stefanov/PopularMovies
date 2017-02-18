@@ -6,10 +6,10 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/videos_container"
+        android:id="@+id/reviews_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
     </LinearLayout>
-
+    
 </android.support.v4.widget.NestedScrollView>

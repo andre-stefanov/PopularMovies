@@ -9,6 +9,8 @@ import java.util.List;
 import de.andrestefanov.popularmovies.data.db.DbHelper;
 import de.andrestefanov.popularmovies.data.network.ApiHelper;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.data.network.model.Review;
+import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
 import de.andrestefanov.popularmovies.data.prefs.PreferencesHelper;
@@ -71,6 +73,11 @@ public class DataManagerImpl implements DataManager {
     @Override
     public void loadVideoImage(String videoKey, ImageView imageView, Callback callback) {
         mApiHelper.loadVideoImage(videoKey, imageView, callback);
+    }
+
+    @Override
+    public void loadMovieReviews(int movieId, int page, retrofit2.Callback<ReviewsPage> callback) {
+        mApiHelper.loadMovieReviews(movieId, page, callback);
     }
 
     @Override

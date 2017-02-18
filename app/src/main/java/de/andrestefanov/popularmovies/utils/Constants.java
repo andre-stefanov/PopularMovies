@@ -7,7 +7,7 @@ public class Constants {
 
     public static final String TMDB_POSTER_BASE_URL = "http://image.tmdb.org/t/p/w342/";
 
-    public static final String TMDB_BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w1300_and_h730_bestv2/";
+    public static final String TMDB_BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w1280/";
 
     public static final String TMDB_POPULAR_MOVIES_PATH = "popular";
 

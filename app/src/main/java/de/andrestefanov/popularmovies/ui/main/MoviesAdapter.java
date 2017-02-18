@@ -1,4 +1,4 @@
-package de.andrestefanov.popularmovies.ui;
+package de.andrestefanov.popularmovies.ui.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,9 +15,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
-import de.andrestefanov.popularmovies.ui.main.PosterMvpPresenter;
-import de.andrestefanov.popularmovies.ui.main.PosterMvpView;
-import de.andrestefanov.popularmovies.ui.main.PosterPresenter;
 
 class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 

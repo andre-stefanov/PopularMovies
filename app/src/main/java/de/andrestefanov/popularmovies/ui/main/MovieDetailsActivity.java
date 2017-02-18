@@ -1,4 +1,4 @@
-package de.andrestefanov.popularmovies.ui;
+package de.andrestefanov.popularmovies.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +15,9 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -36,12 +36,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.ui.details.MovieBackdropMvpView;
 import de.andrestefanov.popularmovies.ui.details.MovieBackdropPresenter;
 import de.andrestefanov.popularmovies.ui.details.MovieOverviewMvpView;
 import de.andrestefanov.popularmovies.ui.details.MovieOverviewPresenter;
+import de.andrestefanov.popularmovies.ui.details.MovieReviewMvpView;
 import de.andrestefanov.popularmovies.ui.details.MovieVideosMvpView;
+import de.andrestefanov.popularmovies.ui.details.ReviewsPresenter;
 import de.andrestefanov.popularmovies.ui.details.VideosPresenter;
 
 public class MovieDetailsActivity extends AppCompatActivity implements MovieBackdropMvpView {
@@ -76,12 +79,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
         ButterKnife.bind(this);
 
         tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return false;
-//            }
-//        });
 
         setSupportActionBar(toolbar);
 
@@ -144,7 +141,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
 
         static final String[] TAB_TITLES = new String[]{
                 "Overview",
-                "Videos"
+                "Videos",
+                "Reviews"
         };
 
         private final Context context;
@@ -164,6 +162,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
                     return MovieOverviewFragment.createInstance(new MovieOverviewPresenter<>(movie));
                 case 1:
                     return MovieVideosFragment.createInstance(new VideosPresenter<>(movie.getId()));
+                case 2:
+                    return MovieReviewsFragment.createInstance(new ReviewsPresenter<>(movie.getId()));
             }
             return null;
         }
@@ -180,6 +180,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
                     return context.getString(R.string.movie_overview);
                 case 1:
                     return context.getString(R.string.movie_videos);
+                case 2:
+                    return context.getString(R.string.movie_reviews);
                 default:
                     return "NO TITLE";
             }
@@ -316,5 +318,51 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
         public void hideLoading() {
 
         }
+    }
+
+    public static class MovieReviewsFragment extends Fragment implements MovieReviewMvpView {
+
+        @BindView(R.id.reviews_container)
+        LinearLayout reviewsContainer;
+
+        private ReviewsPresenter<MovieReviewMvpView> presenter;
+
+        public static MovieReviewsFragment createInstance(ReviewsPresenter<MovieReviewMvpView> presenter) {
+            MovieReviewsFragment fragment = new MovieReviewsFragment();
+            fragment.presenter = presenter;
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_movie_reviews, container, false);
+            ButterKnife.bind(this, rootView);
+
+            presenter.onAttach(this);
+
+            return rootView;
+        }
+
+        @Override
+        public void showReviews(List<Review> reviews) {
+            Log.d(TAG, "showReviews() called with: reviews = [" + reviews + "]");
+            for (Review review : reviews) {
+                View videoView = getActivity().getLayoutInflater().inflate(R.layout.view_review, reviewsContainer, false);
+                ((TextView) videoView.findViewById(R.id.review_title)).setText(review.getAuthor());
+                ((TextView) videoView.findViewById(R.id.review_content)).setText(review.getContent());
+                reviewsContainer.addView(videoView);
+            }
+        }
+
+        @Override
+        public void showLoading() {
+
+        }
+
+        @Override
+        public void hideLoading() {
+
+        }
+
     }
 }
