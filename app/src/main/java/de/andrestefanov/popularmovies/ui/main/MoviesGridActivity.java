@@ -2,9 +2,10 @@ package de.andrestefanov.popularmovies.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +29,18 @@ import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
 import de.andrestefanov.popularmovies.ui.details.MovieDetailsActivity;
 import de.andrestefanov.popularmovies.utils.DefaultAnimationListener;
 
-public class MoviesGridActivity extends AppCompatActivity implements MoviesMvpView, MoviesAdapter.OnMovieClickListener, MoviesAdapter.OnMoreDataRequestListener {
+public class MoviesGridActivity extends MvpLceActivity<RecyclerView, List<Movie>, MoviesView, MoviesPresenter> implements MoviesView, MoviesAdapter.OnMovieClickListener, MoviesAdapter.OnMoreDataRequestListener {
 
     @SuppressWarnings("unused")
     private static final String TAG = "MoviesGridActivity";
 
     MoviesAdapter adapter;
 
-    @BindView(R.id.recycler_view_movies)
+    @BindView(R.id.contentView)
     RecyclerView recyclerView;
 
     @BindView(R.id.fab)
     FloatingActionMenu fabMenu;
-
-    private MoviesMvpPresenter<MoviesMvpView> presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,28 +48,32 @@ public class MoviesGridActivity extends AppCompatActivity implements MoviesMvpVi
         setContentView(R.layout.activity_movies_grid);
         ButterKnife.bind(this);
 
-        presenter = new MoviesPresenter<>();
-
-        recyclerView.setHasFixedSize(true);
+        this.recyclerView.setHasFixedSize(true);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
-        recyclerView.setLayoutManager(layoutManager);
+        this.recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new MoviesAdapter(this, this);
+        this.adapter = new MoviesAdapter(this, this);
         this.recyclerView.setAdapter(adapter);
 
-        adapter.setClickListener(this);
+        this.adapter.setClickListener(this);
 
         this.fabMenu.setClosedOnTouchOutside(true);
         this.fabMenu.setIconAnimated(false);
+
+        loadData(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         this.fabMenu.showMenuButton(true);
+    }
 
-        presenter.onAttach(this);
+    @NonNull
+    @Override
+    public MoviesPresenter createPresenter() {
+        return new MoviesPresenter();
     }
 
     private void initFab(MoviesFilter filter) {
@@ -90,11 +94,13 @@ public class MoviesGridActivity extends AppCompatActivity implements MoviesMvpVi
     }
 
     public void showMostPopular(View view) {
-        presenter.onFilterChange(MoviesFilter.POPULAR);
+        presenter.setFilter(MoviesFilter.POPULAR);
+        initFab(MoviesFilter.POPULAR);
     }
 
     public void showTopRated(View view) {
-        presenter.onFilterChange(MoviesFilter.TOP_RATED);
+        presenter.setFilter(MoviesFilter.TOP_RATED);
+        initFab(MoviesFilter.TOP_RATED);
     }
 
     @Override
@@ -149,32 +155,53 @@ public class MoviesGridActivity extends AppCompatActivity implements MoviesMvpVi
     }
 
     @Override
-    public void showMoreData(List<Movie> movies) {
-        adapter.addAll(movies);
-    }
-
-    @Override
-    public void showFilter(MoviesFilter filter) {
-        initFab(filter);
+    public void addData(List<Movie> movies) {
+        adapter.addData(movies);
     }
 
     @Override
     public void clear() {
+        Log.d(TAG, "clear() called");
         adapter.clear();
     }
 
     @Override
-    public void showLoading() {
-        Log.d(TAG, "showLoading() called");
-    }
-
-    @Override
-    public void hideLoading() {
-        Log.d(TAG, "hideLoading() called");
-    }
-
-    @Override
     public void onRequestMoreData() {
-        presenter.requestMoreData();
+        presenter.loadMoreMovies();
     }
+
+    @Override
+    public void showLoading(boolean pullToRefresh) {
+        super.showLoading(pullToRefresh);
+        Log.d(TAG, "showLoading() called with: pullToRefresh = [" + pullToRefresh + "]");
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+        Log.d(TAG, "showContent() called");
+    }
+
+    @Override
+    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
+        Log.d(TAG, "getErrorMessage() called with: e = [" + e + "], pullToRefresh = [" + pullToRefresh + "]");
+        return "error";
+    }
+
+    @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+        Log.e(TAG, "showError() called with: e = [" + e + "], pullToRefresh = [" + pullToRefresh + "]");
+    }
+
+    @Override
+    public void setData(List<Movie> data) {
+        adapter.setData(data);
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
+        Log.d(TAG, "loadData() called with: pullToRefresh = [" + pullToRefresh + "]");
+        presenter.loadMoreMovies();
+    }
+
 }

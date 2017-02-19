@@ -1,10 +1,6 @@
 package de.andrestefanov.popularmovies.ui.details;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,30 +12,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import com.squareup.picasso.Callback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
-import de.andrestefanov.popularmovies.data.network.model.Review;
-import de.andrestefanov.popularmovies.data.network.model.Video;
 
-public class MovieDetailsActivity extends AppCompatActivity implements MovieBackdropMvpView {
+public class MovieDetailsActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     private static final String TAG = "MovieDetailsActivity";
@@ -64,8 +49,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
     @BindView(R.id.tabs)
     TabLayout tabLayout;
 
-    MovieBackdropPresenter<MovieBackdropMvpView> backdropPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,16 +72,29 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
         if (extras != null) {
             final Movie movie = extras.getParcelable(ARG_MOVIE);
 
-            viewPager.setAdapter(new MovieDetailsPagerAdapter(getSupportFragmentManager(), this, movie));
+            viewPager.setAdapter(new MovieDetailsPagerAdapter(getSupportFragmentManager(), movie));
+
+            // workaround for viewpager repeatedly calling onCreateView on each fragment
+            viewPager.setOffscreenPageLimit(2);
 
             if (movie != null) {
-                backdropPresenter = new MovieBackdropPresenter<>(movie.getBackdropPath());
-                backdropPresenter.onAttach(this);
+                progressBackdrop.show();
+                PopularMoviesApp.dataManager().loadBackdrop(movie.getBackdropPath(), backdropImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBackdrop.hide();
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+
 
                 toolbar.setTitle(movie.getTitle());
             }
         }
-
     }
 
     @Override
@@ -116,247 +112,51 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieBack
         super.onBackPressed();
     }
 
-    @Override
-    public ImageView getBackdropImageView() {
-        return backdropImageView;
-    }
-
-    @Override
-    public void showLoading() {
-        progressBackdrop.show();
-    }
-
-    @Override
-    public void hideLoading() {
-        progressBackdrop.hide();
-    }
-
-    public static class MovieDetailsPagerAdapter extends FragmentPagerAdapter {
-
-        static final String[] TAB_TITLES = new String[]{
-                "Overview",
-                "Videos",
-                "Reviews"
-        };
-
-        private final Context context;
+    public class MovieDetailsPagerAdapter extends FragmentPagerAdapter {
 
         private final Movie movie;
 
-        MovieDetailsPagerAdapter(FragmentManager fm, Context context, Movie movie) {
+        MovieDetailsPagerAdapter(FragmentManager fm, Movie movie) {
             super(fm);
             this.movie = movie;
-            this.context = context;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
         }
 
         @Override
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return MovieOverviewFragment.createInstance(new MovieOverviewPresenter<>(movie));
+                    return OverviewFragment.createInstance(movie.getId());
                 case 1:
-                    return MovieVideosFragment.createInstance(new VideosPresenter<>(movie.getId()));
+                    return VideosFragment.createInstance(movie.getId());
                 case 2:
-                    return MovieReviewsFragment.createInstance(new ReviewsPresenter<>(movie.getId()));
+                    return ReviewsFragment.createInstance(movie.getId());
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return TAB_TITLES.length;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return context.getString(R.string.movie_overview);
+                    return getString(R.string.movie_overview);
                 case 1:
-                    return context.getString(R.string.movie_videos);
+                    return getString(R.string.movie_videos);
                 case 2:
-                    return context.getString(R.string.movie_reviews);
+                    return getString(R.string.movie_reviews);
                 default:
                     return "NO TITLE";
             }
         }
     }
 
-    public static class MovieOverviewFragment extends Fragment implements MovieOverviewMvpView {
-
-        @BindView(R.id.imageview_movie_poster)
-        ImageView moviePoster;
-
-        @BindView(R.id.textview_movie_overview)
-        TextView movieOverview;
-
-        @BindView(R.id.textview_movie_release)
-        TextView movieReleaseDate;
-
-        @BindView(R.id.textview_votes)
-        TextView movieVotes;
-
-        MovieOverviewPresenter<MovieOverviewMvpView> presenter;
-
-        public static MovieOverviewFragment createInstance(MovieOverviewPresenter<MovieOverviewMvpView> presenter) {
-            MovieOverviewFragment fragment = new MovieOverviewFragment();
-            fragment.presenter = presenter;
-            return fragment;
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_movie_overview, container, false);
-            ButterKnife.bind(this, rootView);
-
-            presenter.onAttach(this);
-
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Context context) {
-            super.onAttach(context);
-
-        }
-
-        @Override
-        public ImageView getPosterImageView() {
-            return moviePoster;
-        }
-
-        @Override
-        public void showMovie(Movie movie) {
-            movieOverview.setText(movie.getOverview());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            DateFormat localFormat = android.text.format.DateFormat.getLongDateFormat(getContext());
-            Date releaseDate = null;
-            try {
-                releaseDate = dateFormat.parse(movie.getReleaseDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            movieReleaseDate.setText(localFormat.format(releaseDate));
-
-            movieVotes.setText(String.format(Locale.ENGLISH, "%s/10 (%s)", movie.getVoteAverage(), movie.getVoteCount()));
-        }
-
-        @Override
-        public void showLoading() {
-
-        }
-
-        @Override
-        public void hideLoading() {
-            moviePoster.getViewTreeObserver().addOnPreDrawListener(
-                    new ViewTreeObserver.OnPreDrawListener() {
-                        @Override
-                        public boolean onPreDraw() {
-                            movieOverview.getViewTreeObserver().removeOnPreDrawListener(this);
-                            getActivity().supportStartPostponedEnterTransition();
-                            return true;
-                        }
-                    });
-        }
-    }
-
-    public static class MovieVideosFragment extends Fragment implements MovieVideosMvpView {
-
-        @BindView(R.id.videos_container)
-        LinearLayout videosContainer;
-
-        private VideosPresenter<MovieVideosMvpView> presenter;
-
-        public static MovieVideosFragment createInstance(VideosPresenter<MovieVideosMvpView> presenter) {
-            MovieVideosFragment fragment = new MovieVideosFragment();
-            fragment.presenter = presenter;
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_movie_videos, container, false);
-            ButterKnife.bind(this, rootView);
-
-            presenter.onAttach(this);
-
-            return rootView;
-        }
-
-        @Override
-        public void showVideos(List<Video> videos) {
-            for (Video video : videos) {
-                View videoView = getActivity().getLayoutInflater().inflate(R.layout.view_movie_video, videosContainer, false);
-                ((TextView) videoView.findViewById(R.id.video_title)).setText(video.getName());
-                presenter.loadVideoImage(video.getKey(), (ImageView) videoView.findViewById(R.id.video_thumbnail));
-                videoView.setTag("http://www.youtube.com/watch?v=" + video.getKey());
-
-                videoView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse((String) v.getTag())));
-                    }
-                });
-
-                videosContainer.addView(videoView);
-            }
-        }
-
-        @Override
-        public void showLoading() {
-
-        }
-
-        @Override
-        public void hideLoading() {
-
-        }
-    }
-
-    public static class MovieReviewsFragment extends Fragment implements MovieReviewMvpView {
-
-        @BindView(R.id.reviews_container)
-        LinearLayout reviewsContainer;
-
-        private ReviewsPresenter<MovieReviewMvpView> presenter;
-
-        public static MovieReviewsFragment createInstance(ReviewsPresenter<MovieReviewMvpView> presenter) {
-            MovieReviewsFragment fragment = new MovieReviewsFragment();
-            fragment.presenter = presenter;
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_movie_reviews, container, false);
-            ButterKnife.bind(this, rootView);
-
-            presenter.onAttach(this);
-
-            return rootView;
-        }
-
-        @Override
-        public void showReviews(List<Review> reviews) {
-            Log.d(TAG, "showReviews() called with: reviews = [" + reviews + "]");
-            for (Review review : reviews) {
-                View videoView = getActivity().getLayoutInflater().inflate(R.layout.view_review, reviewsContainer, false);
-                ((TextView) videoView.findViewById(R.id.review_title)).setText(review.getAuthor());
-                ((TextView) videoView.findViewById(R.id.review_content)).setText(review.getContent());
-                reviewsContainer.addView(videoView);
-            }
-        }
-
-        @Override
-        public void showLoading() {
-
-        }
-
-        @Override
-        public void hideLoading() {
-
-        }
-
-    }
 }

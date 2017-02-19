@@ -9,6 +9,7 @@ import java.util.List;
 import de.andrestefanov.popularmovies.data.db.DbHelper;
 import de.andrestefanov.popularmovies.data.network.ApiHelper;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
 import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
@@ -28,6 +29,11 @@ public class DataManagerImpl implements DataManager {
         mDbHelper = dbHelper;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
+    }
+
+    @Override
+    public void loadMovie(int movieId, retrofit2.Callback<MovieDetails> callback) {
+        mApiHelper.loadMovie(movieId, callback);
     }
 
     @Override

@@ -15,11 +15,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.utils.Constants;
 
 class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static int THRESHOLD = 20;
+    private static int THRESHOLD = Constants.TMDB_API_MOVIES_PER_PAGE;
 
     private List<Movie> data;
 
@@ -59,10 +60,18 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
         dataRequestListener.onRequestMoreData();
     }
 
-    public void addAll(List<Movie> movies) {
+    void setData(List<Movie> movies) {
+        data = movies;
+        notifyDataSetChanged();
+
+        loading = false;
+    }
+
+    void addData(List<Movie> movies) {
         int oldSize = data.size();
         data.addAll(movies);
         notifyItemRangeInserted(oldSize, movies.size());
+
         loading = false;
     }
 
@@ -75,8 +84,12 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
         this.clickListener = clickListener;
     }
 
-    public void clear() {
+    void clear() {
         this.reset();
+    }
+
+    public List<Movie> getMovies() {
+        return data;
     }
 
     interface OnMoreDataRequestListener {

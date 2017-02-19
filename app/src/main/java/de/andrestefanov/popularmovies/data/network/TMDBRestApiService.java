@@ -3,6 +3,7 @@ package de.andrestefanov.popularmovies.data.network;
 import java.util.List;
 
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import retrofit2.Call;
@@ -12,6 +13,9 @@ import retrofit2.http.Query;
 
 interface TMDBRestApiService {
 
+    @GET("movie/{id}")
+    Call<MovieDetails> loadMovie(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language);
+
     @GET("movie/popular")
     Call<List<Movie>> loadPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
@@ -19,8 +23,8 @@ interface TMDBRestApiService {
     Call<List<Movie>> loadTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/{id}/videos")
-    Call<List<Video>> getMovieVideos(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language);
+    Call<List<Video>> loadMovieVideos(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/{id}/reviews")
-    Call<ReviewsPage> getMovieReviews(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Call<ReviewsPage> loadMovieReviews(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 }

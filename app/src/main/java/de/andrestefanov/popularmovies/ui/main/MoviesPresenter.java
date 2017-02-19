@@ -1,71 +1,67 @@
 package de.andrestefanov.popularmovies.ui.main;
 
-import android.util.Log;
+import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import java.util.List;
 
 import de.andrestefanov.popularmovies.PopularMoviesApp;
+import de.andrestefanov.popularmovies.data.DataManager;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MoviesPresenter<V extends MoviesMvpView> implements MoviesMvpPresenter<V> {
+class MoviesPresenter extends MvpBasePresenter<MoviesView> {
 
-    private static final String TAG = "MoviesPresenter";
+    private int pagesRequested = 0;
 
-    private int pagesLoaded = 0;
+    private DataManager dataManager = PopularMoviesApp.dataManager();
 
-    private V view;
-
-    @Override
-    public void requestMoreData() {
+    void loadMoreMovies() {
         switch (PopularMoviesApp.dataManager().getMovieFilter()) {
             case TOP_RATED:
-                PopularMoviesApp.dataManager().loadTopRatedMovies(++pagesLoaded, new MoreDataRequestCallback());
+                PopularMoviesApp.dataManager().loadTopRatedMovies(
+                        ++pagesRequested,
+                        new MoreDataRequestCallback());
                 break;
             default:
-                PopularMoviesApp.dataManager().loadPopularMovies(++pagesLoaded, new MoreDataRequestCallback());
+                PopularMoviesApp.dataManager().loadPopularMovies(
+                        ++pagesRequested,
+                        new MoreDataRequestCallback());
         }
     }
 
-    @Override
-    public void onMovieClicked(Movie movie) {
+    void setFilter(MoviesFilter filter) {
+        if (dataManager.getMovieFilter().equals(filter))
+            return;
 
-    }
-
-    @Override
-    public void onFilterChange(MoviesFilter filter) {
         PopularMoviesApp.dataManager().setMovieFilter(filter);
-        view.clear();
-        pagesLoaded = 0;
-        requestMoreData();
-    }
+        if (getView() != null) {
+            getView().clear();
+            pagesRequested = 0;
+            
+            getView().showLoading(false);
 
-    @Override
-    public void onAttach(V view) {
-        this.view = view;
-
-        if (pagesLoaded == 0)
-            requestMoreData();
-    }
-
-    @Override
-    public void onDetach() {
-        this.view = null;
+            loadMoreMovies();
+        }
     }
 
     private class MoreDataRequestCallback implements Callback<List<Movie>> {
 
         @Override
         public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
-            view.showMoreData(response.body());
+            if (getView() != null) {
+                getView().addData(response.body());
+                getView().showContent();
+            }
         }
 
         @Override
         public void onFailure(Call<List<Movie>> call, Throwable t) {
-            Log.e(TAG, "onFailure: ", t);
+            if (getView() != null) {
+                getView().showError(t, false);
+            }
         }
     }
 

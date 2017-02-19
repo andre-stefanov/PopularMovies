@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import de.andrestefanov.popularmovies.BuildConfig;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.utils.Constants;
@@ -49,6 +50,16 @@ public class ApiHelperImpl implements ApiHelper {
         picasso = new Picasso.Builder(context)
                 .downloader(new OkHttp3Downloader(httpClient))
                 .build();
+    }
+
+    @Override
+    public void loadMovie(int movieId, Callback<MovieDetails> callback) {
+        tmdbRestApiService
+                .loadMovie(
+                        movieId,
+                        BuildConfig.TMBD_API_KEY,
+                        Locale.getDefault().getLanguage())
+                .enqueue(callback);
     }
 
     @Override
@@ -91,7 +102,7 @@ public class ApiHelperImpl implements ApiHelper {
 
     @Override
     public void loadMovieVideos(int movieId, Callback<List<Video>> callback) {
-        tmdbRestApiService.getMovieVideos(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage()).enqueue(callback);
+        tmdbRestApiService.loadMovieVideos(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage()).enqueue(callback);
     }
 
     @Override
@@ -106,6 +117,6 @@ public class ApiHelperImpl implements ApiHelper {
 
     @Override
     public void loadMovieReviews(int movieId, int page, Callback<ReviewsPage> callback) {
-        tmdbRestApiService.getMovieReviews(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage(), page).enqueue(callback);
+        tmdbRestApiService.loadMovieReviews(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage(), page).enqueue(callback);
     }
 }
