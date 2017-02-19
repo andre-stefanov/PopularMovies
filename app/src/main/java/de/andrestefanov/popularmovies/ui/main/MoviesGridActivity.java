@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
@@ -60,6 +61,8 @@ public class MoviesGridActivity extends MvpLceActivity<RecyclerView, List<Movie>
 
         this.fabMenu.setClosedOnTouchOutside(true);
         this.fabMenu.setIconAnimated(false);
+
+        initFab(PopularMoviesApp.dataManager().getMovieFilter());
 
         loadData(false);
     }
@@ -161,7 +164,6 @@ public class MoviesGridActivity extends MvpLceActivity<RecyclerView, List<Movie>
 
     @Override
     public void clear() {
-        Log.d(TAG, "clear() called");
         adapter.clear();
     }
 
@@ -173,24 +175,21 @@ public class MoviesGridActivity extends MvpLceActivity<RecyclerView, List<Movie>
     @Override
     public void showLoading(boolean pullToRefresh) {
         super.showLoading(pullToRefresh);
-        Log.d(TAG, "showLoading() called with: pullToRefresh = [" + pullToRefresh + "]");
     }
 
     @Override
     public void showContent() {
         super.showContent();
-        Log.d(TAG, "showContent() called");
     }
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        Log.d(TAG, "getErrorMessage() called with: e = [" + e + "], pullToRefresh = [" + pullToRefresh + "]");
-        return "error";
+        return e.getMessage();
     }
 
     @Override
     public void showError(Throwable e, boolean pullToRefresh) {
-        Log.e(TAG, "showError() called with: e = [" + e + "], pullToRefresh = [" + pullToRefresh + "]");
+        super.showError(e, pullToRefresh);
     }
 
     @Override
@@ -200,7 +199,6 @@ public class MoviesGridActivity extends MvpLceActivity<RecyclerView, List<Movie>
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        Log.d(TAG, "loadData() called with: pullToRefresh = [" + pullToRefresh + "]");
         presenter.loadMoreMovies();
     }
 

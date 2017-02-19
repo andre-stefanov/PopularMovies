@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.squareup.picasso.Callback;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.utils.Constants;
@@ -75,21 +78,13 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
         loading = false;
     }
 
-    private void reset() {
-        data.clear();
-        notifyDataSetChanged();
-    }
-
     void setClickListener(OnMovieClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
     void clear() {
-        this.reset();
-    }
-
-    public List<Movie> getMovies() {
-        return data;
+        data.clear();
+        notifyDataSetChanged();
     }
 
     interface OnMoreDataRequestListener {
@@ -102,7 +97,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
         void onClick(ImageView imageView, Movie movie);
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder implements PosterMvpView {
+    class MovieViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.imageview_poster)
         ImageView poster;
@@ -110,16 +105,9 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
         @BindView(R.id.backdrop_progress)
         ProgressBar progress;
 
-        private PosterMvpPresenter presenter;
-
         MovieViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            presenter = new PosterPresenter<PosterMvpView>(this);
-        }
-
-        void setPosterPath(String posterPath) {
-            presenter.setPosterPath(posterPath);
         }
 
         @OnClick(R.id.imageview_poster)
@@ -127,19 +115,19 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> 
             clickListener.onClick(poster, data.get(getAdapterPosition()));
         }
 
-        @Override
-        public void showLoading() {
+        void setPosterPath(String posterPath) {
             progress.setVisibility(View.VISIBLE);
-        }
+            PopularMoviesApp.dataManager().loadPoster(posterPath, poster, new Callback() {
+                @Override
+                public void onSuccess() {
+                    progress.setVisibility(View.INVISIBLE);
+                }
 
-        @Override
-        public void hideLoading() {
-            progress.setVisibility(View.INVISIBLE);
-        }
+                @Override
+                public void onError() {
 
-        @Override
-        public ImageView getImageView() {
-            return poster;
+                }
+            });
         }
     }
 }
