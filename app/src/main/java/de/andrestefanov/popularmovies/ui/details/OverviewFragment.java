@@ -2,16 +2,14 @@ package de.andrestefanov.popularmovies.ui.details;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 import com.squareup.picasso.Callback;
 
 import java.text.DateFormat;
@@ -26,9 +24,11 @@ import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
 
-public class OverviewFragment extends MvpLceFragment<LinearLayout, MovieDetails, MvpLceView<MovieDetails>, MoviePresenter> {
+public class OverviewFragment extends Fragment {
 
-    int movieId;
+    private static final String TAG = "OverviewFragment";
+
+    private MovieDetails movie;
 
     @BindView(R.id.imageview_movie_poster)
     ImageView moviePoster;
@@ -42,9 +42,9 @@ public class OverviewFragment extends MvpLceFragment<LinearLayout, MovieDetails,
     @BindView(R.id.textview_votes)
     TextView movieVotes;
 
-    public static OverviewFragment createInstance(int movieId) {
+    public static OverviewFragment createInstance(MovieDetails movie) {
         OverviewFragment fragment = new OverviewFragment();
-        fragment.movieId = movieId;
+        fragment.movie = movie;
         return fragment;
     }
 
@@ -54,28 +54,6 @@ public class OverviewFragment extends MvpLceFragment<LinearLayout, MovieDetails,
         View rootView = inflater.inflate(R.layout.fragment_movie_overview, container, false);
         ButterKnife.bind(this, rootView);
 
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        getPresenter().loadMovieDetails(false);
-    }
-
-    @Override
-    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return e.getMessage();
-    }
-
-    @Override
-    public MoviePresenter createPresenter() {
-        return new MoviePresenter(movieId);
-    }
-
-    @Override
-    public void setData(MovieDetails movie) {
         movieOverview.setText(movie.getOverview());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         DateFormat localFormat = android.text.format.DateFormat.getLongDateFormat(getContext());
@@ -108,10 +86,7 @@ public class OverviewFragment extends MvpLceFragment<LinearLayout, MovieDetails,
 
             }
         });
-    }
 
-    @Override
-    public void loadData(boolean pullToRefresh) {
-        getPresenter().loadMovieDetails(pullToRefresh);
+        return rootView;
     }
 }

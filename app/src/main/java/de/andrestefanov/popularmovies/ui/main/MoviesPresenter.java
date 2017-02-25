@@ -18,16 +18,17 @@ class MoviesPresenter extends MvpBasePresenter<MoviesView> {
 
     private DataManager dataManager = PopularMoviesApp.dataManager();
 
-    void loadMoreMovies() {
+    void loadMovies(boolean refresh) {
+        pagesRequested = refresh ? 1 : pagesRequested + 1;
         switch (PopularMoviesApp.dataManager().getMovieFilter()) {
             case TOP_RATED:
                 PopularMoviesApp.dataManager().loadTopRatedMovies(
-                        ++pagesRequested,
+                        pagesRequested,
                         new MoreDataRequestCallback());
                 break;
             default:
                 PopularMoviesApp.dataManager().loadPopularMovies(
-                        ++pagesRequested,
+                        pagesRequested,
                         new MoreDataRequestCallback());
         }
     }
@@ -39,11 +40,10 @@ class MoviesPresenter extends MvpBasePresenter<MoviesView> {
         PopularMoviesApp.dataManager().setMovieFilter(filter);
         if (getView() != null) {
             getView().clear();
-            pagesRequested = 0;
             
             getView().showLoading(false);
 
-            loadMoreMovies();
+            loadMovies(true);
         }
     }
 

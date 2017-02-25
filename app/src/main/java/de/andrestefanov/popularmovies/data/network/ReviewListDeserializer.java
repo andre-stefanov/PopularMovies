@@ -11,14 +11,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.andrestefanov.popularmovies.data.network.model.Video;
+import de.andrestefanov.popularmovies.data.network.model.Review;
 
-class VideoListDeserializer implements JsonDeserializer<List<Video>> {
+class ReviewListDeserializer implements JsonDeserializer<List<Review>> {
 
     private Gson gson = new Gson();
 
     @Override
-    public List<Video> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return gson.fromJson(json.getAsJsonObject().get("results").getAsJsonArray(), new TypeToken<ArrayList<Video>>(){}.getType());
+    public List<Review> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return gson.fromJson(json.getAsJsonObject().get("results").getAsJsonArray(), new TypeToken<ArrayList<Review>>(){}.getType());
     }
 }

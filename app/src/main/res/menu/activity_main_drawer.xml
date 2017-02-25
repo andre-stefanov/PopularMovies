@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_most_popular"
+            android:icon="@drawable/ic_whatshot"
+            android:title="@string/most_popular"/>
+        <item
+            android:id="@+id/nav_top_rated"
+            android:icon="@drawable/ic_star_filled"
+            android:title="@string/top_rated"/>
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite"
+            android:title="@string/favorites"/>
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/drawer_item_settings"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="@string/action_settings" >
+        </item>
+    </group>
+</menu>

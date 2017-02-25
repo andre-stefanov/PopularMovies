@@ -8,4 +8,9 @@
     <string name="movie_videos">Trailer</string>
     <string name="movie_trailer_image">Filmtrailer Vorschaubild</string>
     <string name="movie_reviews">Rezensionen</string>
+    <string name="favorites">Favoriten</string>
+    <string name="navigation_drawer_close">Menü schliessen</string>
+    <string name="navigation_drawer_open">Menü öffnen</string>
+    <string name="title_activity_main"></string>
+    <string name="action_settings">Einstellungen</string>
 </resources>

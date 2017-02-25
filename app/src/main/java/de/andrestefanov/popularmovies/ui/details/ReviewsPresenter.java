@@ -14,19 +14,23 @@ import retrofit2.Response;
 
 class ReviewsPresenter extends MvpBasePresenter<MvpLceView<List<Review>>> {
 
-    private final int movieId;
+    private int movieId;
 
     private int page;
 
-    ReviewsPresenter(int movieId) {
-        this.movieId = movieId;
+    ReviewsPresenter() {
         this.page = 0;
     }
 
-    void loadReviews(final boolean pullToRefresh) {
+    void loadReviews(int movieId, final boolean pullToRefresh) {
+        if (this.movieId != movieId) {
+            this.movieId = movieId;
+            this.page = 0;
+        }
+
         if (getView() != null) {
             getView().showLoading(pullToRefresh);
-            PopularMoviesApp.dataManager().loadMovieReviews(movieId, ++page, new Callback<ReviewsPage>() {
+            PopularMoviesApp.dataManager().loadMovieReviews(movieId, 1, new Callback<ReviewsPage>() {
                 @Override
                 public void onResponse(Call<ReviewsPage> call, Response<ReviewsPage> response) {
                     getView().setData(response.body().getReviews());

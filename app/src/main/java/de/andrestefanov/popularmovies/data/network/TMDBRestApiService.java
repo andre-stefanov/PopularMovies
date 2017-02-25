@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 
 interface TMDBRestApiService {
 
-    @GET("movie/{id}")
+    @GET("movie/{id}?append_to_response=videos,reviews")
     Call<MovieDetails> loadMovie(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language);
 
     @GET("movie/" + Constants.TMDB_POPULAR_MOVIES_PATH)
