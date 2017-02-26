@@ -23,55 +23,67 @@ public class PosterGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final String TAG = "PosterGridAdapter";
 
-    private List<Movie> movies;
+    private List<Movie> data;
 
-    private OnPosterClickListener clickListener;
+    private OnMovieSelectedListener onMovieSelectedListener;
 
-    public PosterGridAdapter() {
-        this.movies = new ArrayList<>();
+    protected PosterGridAdapter() {
+        this.data = new ArrayList<>();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_poster, parent, false));
+        return new PosterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_poster, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ViewHolder)holder).setMovie(movies.get(position));
+        ((PosterViewHolder)holder).setMovie(data.get(position));
     }
 
     @Override
-    public int getItemCount() {
-        return movies.size();
+    public final int getItemCount() {
+        return data.size();
     }
 
-    public void setData(List<Movie> data) {
-        movies = data;
+    public final void setData(List<Movie> data) {
+        this.data = data;
         notifyDataSetChanged();
+        onDataChanged();
     }
 
-    public void clear() {
-        movies.clear();
+    public final void clear() {
+        data.clear();
         notifyDataSetChanged();
+        onDataChanged();
     }
 
-    public void addData(Movie movie) {
-        movies.add(movie);
-        notifyItemInserted(movies.size() - 1);
+    public final void addData(Movie movie) {
+        data.add(movie);
+        notifyItemInserted(data.size() - 1);
+        onDataChanged();
     }
 
-    public void addData(List<Movie> data) {
-        int oldSize = movies.size();
-        movies.addAll(data);
+    public final void addData(List<Movie> data) {
+        int oldSize = this.data.size();
+        this.data.addAll(data);
         notifyItemRangeInserted(oldSize, data.size());
+        onDataChanged();
     }
 
-    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
-        this.clickListener = onPosterClickListener;
+    public final List<Movie> getData() {
+        return data;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements Callback {
+    void setOnMovieSelectedListener(OnMovieSelectedListener onMovieSelectedListener) {
+        this.onMovieSelectedListener = onMovieSelectedListener;
+    }
+
+    protected void onDataChanged() {
+
+    }
+
+    class PosterViewHolder extends RecyclerView.ViewHolder implements Callback {
 
         @BindView(R.id.imageview_poster)
         ImageView posterView;
@@ -79,15 +91,15 @@ public class PosterGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @BindView(R.id.imageview_poster_progress)
         ProgressBar progress;
 
-        private ViewHolder(View view) {
+        private PosterViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
 
             posterView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (clickListener != null)
-                        clickListener.onPosterClick(posterView, movies.get(getAdapterPosition()));
+                    if (onMovieSelectedListener != null)
+                        onMovieSelectedListener.onMovieSelected(data.get(getAdapterPosition()));
                 }
             });
         }
@@ -106,12 +118,6 @@ public class PosterGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onError() {
             Log.e(TAG, "onError() called");
         }
-    }
-
-    public interface OnPosterClickListener {
-
-        void onPosterClick(ImageView poster, Movie movie);
-
     }
 
 }

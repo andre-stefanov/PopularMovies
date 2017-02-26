@@ -1,5 +1,7 @@
 package de.andrestefanov.popularmovies.ui.main;
 
+import android.util.Log;
+
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import java.util.List;
@@ -14,11 +16,14 @@ import retrofit2.Response;
 
 class MoviesPresenter extends MvpBasePresenter<MoviesView> {
 
+    private static final String TAG = "MoviesPresenter";
+
     private int pagesRequested = 0;
 
     private DataManager dataManager = PopularMoviesApp.dataManager();
 
     void loadMovies(boolean refresh) {
+        Log.d(TAG, "loadMovies() called with: refresh = [" + refresh + "]");
         pagesRequested = refresh ? 1 : pagesRequested + 1;
         switch (PopularMoviesApp.dataManager().getMovieFilter()) {
             case TOP_RATED:
@@ -64,5 +69,7 @@ class MoviesPresenter extends MvpBasePresenter<MoviesView> {
             }
         }
     }
+
+
 
 }

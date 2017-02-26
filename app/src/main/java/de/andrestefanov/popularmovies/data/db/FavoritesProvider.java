@@ -14,8 +14,7 @@ public final class FavoritesProvider {
 
         @ContentUri(
                 path = "favorites",
-                type = "vnd.android.cursor.dir/list",
-                defaultSort = FavoriteColumns._ID + " ASC")
+                type = "vnd.android.cursor.dir/list")
         public static final Uri FAVORITES = Uri.parse("content://" + AUTHORITY + "/favorites");
 
     }

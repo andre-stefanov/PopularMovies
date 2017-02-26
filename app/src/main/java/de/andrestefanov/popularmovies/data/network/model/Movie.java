@@ -264,4 +264,12 @@ public class Movie implements Parcelable {
         dest.writeValue(this.video);
         dest.writeValue(this.voteAverage);
     }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

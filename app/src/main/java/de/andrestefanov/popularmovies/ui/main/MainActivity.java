@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,9 +21,10 @@ import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
+import de.andrestefanov.popularmovies.ui.base.OnMovieSelectedListener;
 import de.andrestefanov.popularmovies.ui.details.MovieDetailsFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MovieGridFragment.OnMovieClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMovieSelectedListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     ActionBarDrawerToggle toggle;
 
+    public static final String TAG_GRID_FRAGMENT = "MoviesGridFragment";
     MovieGridFragment gridFragment;
 
     @Override
@@ -58,12 +59,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        gridFragment = new MovieGridFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+        gridFragment = (MovieGridFragment) fragmentManager.findFragmentByTag(TAG_GRID_FRAGMENT);
+
+        if (gridFragment == null)
+            gridFragment = new MovieGridFragment();
+
         fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container, gridFragment)
+                .replace(R.id.fragment_container, gridFragment, TAG_GRID_FRAGMENT)
                 .commit();
     }
 
@@ -97,14 +102,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        gridFragment.onFilterChanged();
+        gridFragment.onFilterChanged(PopularMoviesApp.dataManager().getMovieFilter());
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void onMovieClick(ImageView posterView, Movie movie) {
+    public void onMovieSelected(Movie movie) {
         toolbar.setVisibility(View.INVISIBLE);
         Fragment fragment = MovieDetailsFragment.createInstance(movie.getId());
         getSupportFragmentManager().beginTransaction()
