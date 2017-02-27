@@ -52,25 +52,6 @@ public class PosterGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         onDataChanged();
     }
 
-    public final void clear() {
-        data.clear();
-        notifyDataSetChanged();
-        onDataChanged();
-    }
-
-    public final void addData(Movie movie) {
-        data.add(movie);
-        notifyItemInserted(data.size() - 1);
-        onDataChanged();
-    }
-
-    public final void addData(List<Movie> data) {
-        int oldSize = this.data.size();
-        this.data.addAll(data);
-        notifyItemRangeInserted(oldSize, data.size());
-        onDataChanged();
-    }
-
     public final List<Movie> getData() {
         return data;
     }

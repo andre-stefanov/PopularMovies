@@ -1,5 +1,6 @@
 package de.andrestefanov.popularmovies.data;
 
+import android.content.SharedPreferences;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
@@ -10,7 +11,6 @@ import de.andrestefanov.popularmovies.data.db.DbHelper;
 import de.andrestefanov.popularmovies.data.network.ApiHelper;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
-import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
@@ -19,7 +19,7 @@ import de.andrestefanov.popularmovies.data.prefs.PreferencesHelper;
 public class DataManagerImpl implements DataManager {
 
     private final DbHelper mDbHelper;
-    private final PreferencesHelper mPreferencesHelper;
+    private final PreferencesHelper preferencesHelper;
     private final ApiHelper mApiHelper;
 
     public DataManagerImpl(DbHelper dbHelper,
@@ -27,7 +27,7 @@ public class DataManagerImpl implements DataManager {
                            ApiHelper apiHelper)
     {
         mDbHelper = dbHelper;
-        mPreferencesHelper = preferencesHelper;
+        this.preferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
     }
 
@@ -87,12 +87,17 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
+    public SharedPreferences getSharedPreferences() {
+        return preferencesHelper.getSharedPreferences();
+    }
+
+    @Override
     public void setMovieFilter(MoviesFilter filter) {
-        mPreferencesHelper.setMovieFilter(filter);
+        preferencesHelper.setMovieFilter(filter);
     }
 
     @Override
     public MoviesFilter getMovieFilter() {
-        return mPreferencesHelper.getMovieFilter();
+        return preferencesHelper.getMovieFilter();
     }
 }

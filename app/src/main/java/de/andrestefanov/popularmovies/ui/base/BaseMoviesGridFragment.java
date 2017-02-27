@@ -23,13 +23,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
-import de.andrestefanov.popularmovies.ui.main.MoviesView;
 
-public abstract class PosterGridFragment<V extends MvpLceView<List<Movie>>, P extends MvpPresenter<V>>
+public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, P extends MvpPresenter<V>>
         extends MvpLceViewStateFragment<RecyclerView, List<Movie>, V, P>
-        implements OnMovieSelectedListener, MoviesView {
+        implements OnMovieSelectedListener {
 
-    private static final String TAG = "PosterGridFragment";
+    private static final String TAG = "BaseMoviesGridFragment";
 
     PosterGridAdapter adapter;
 
@@ -38,7 +37,7 @@ public abstract class PosterGridFragment<V extends MvpLceView<List<Movie>>, P ex
 
     Unbinder unbinder;
 
-    public PosterGridFragment() {
+    public BaseMoviesGridFragment() {
 
     }
 
@@ -81,15 +80,6 @@ public abstract class PosterGridFragment<V extends MvpLceView<List<Movie>>, P ex
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (adapter.getData() == null || adapter.getData().isEmpty()) {
-            loadData(false);
-        }
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         adapter = null;
@@ -106,10 +96,6 @@ public abstract class PosterGridFragment<V extends MvpLceView<List<Movie>>, P ex
         this.adapter.setData(data);
     }
 
-    protected PosterGridAdapter getAdapter() {
-        return adapter;
-    }
-
     @Override
     public void onMovieSelected(Movie movie) {
         try {
@@ -119,17 +105,8 @@ public abstract class PosterGridFragment<V extends MvpLceView<List<Movie>>, P ex
         }
     }
 
-    @Override
-    public void addData(List<Movie> movies) {
-        this.adapter.addData(movies);
-    }
-
-    @Override
-    public void clear() {
-        this.adapter.clear();
-    }
-
     protected PosterGridAdapter createAdapter() {
+        Log.d(TAG, "createAdapter() called");
         return new PosterGridAdapter();
     }
 }

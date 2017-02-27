@@ -9,4 +9,9 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="overview_poster_width">160dp</dimen>
+    <dimen name="overview_poster_height">240dp</dimen>
+    <dimen name="overview_text_size">15sp</dimen>
+
 </resources>

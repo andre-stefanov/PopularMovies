@@ -2,29 +2,19 @@ package de.andrestefanov.popularmovies.ui.main;
 
 import android.support.annotation.NonNull;
 
-import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
-import de.andrestefanov.popularmovies.ui.base.PosterGridAdapter;
-import de.andrestefanov.popularmovies.ui.base.PosterGridFragment;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 
-public class MovieGridFragment extends PosterGridFragment<MoviesView, MoviesPresenter> implements EndlessMoviesAdapter.OnMoreDataRequestListener {
+import java.util.List;
+
+import de.andrestefanov.popularmovies.data.network.model.Movie;
+import de.andrestefanov.popularmovies.ui.base.BaseMoviesGridFragment;
+import de.andrestefanov.popularmovies.ui.base.BaseMoviesPresenter;
+import de.andrestefanov.popularmovies.ui.base.PosterGridAdapter;
+
+public class MovieGridFragment extends BaseMoviesGridFragment<MvpLceView<List<Movie>>, BaseMoviesPresenter> implements EndlessMoviesAdapter.OnMoreDataRequestListener {
 
     @SuppressWarnings("unused")
     private static final String TAG = "MovieGridFragment";
-
-    @NonNull
-    @Override
-    public MoviesPresenter createPresenter() {
-        return new MoviesPresenter();
-    }
-
-    public void onFilterChanged(MoviesFilter filter) {
-        getPresenter().setFilter(filter);
-    }
-
-    @Override
-    public void loadData(boolean refresh) {
-        getPresenter().loadMovies(refresh);
-    }
 
     @Override
     public void onRequestMoreData() {
@@ -34,5 +24,16 @@ public class MovieGridFragment extends PosterGridFragment<MoviesView, MoviesPres
     @Override
     protected PosterGridAdapter createAdapter() {
         return new EndlessMoviesAdapter(this);
+    }
+
+    @NonNull
+    @Override
+    public BaseMoviesPresenter createPresenter() {
+        return new BaseMoviesPresenter();
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
+        getPresenter().loadMovies(pullToRefresh);
     }
 }

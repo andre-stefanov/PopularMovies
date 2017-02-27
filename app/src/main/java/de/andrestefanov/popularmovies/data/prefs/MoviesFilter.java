@@ -5,8 +5,8 @@ public enum MoviesFilter {
     POPULAR("popular"),
     TOP_RATED("top_rated");
 
-    public static final String MOVIES_FILTER_POPULAR = "popular";
-    public static final String MOVIES_FILTER_TOP_RATED = "top_rated";
+    private static final String MOVIES_FILTER_POPULAR = "popular";
+    private static final String MOVIES_FILTER_TOP_RATED = "top_rated";
 
     private final String value;
 

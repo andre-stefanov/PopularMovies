@@ -17,8 +17,10 @@ class MoviePresenter extends MvpBasePresenter<MvpLceView<MovieDetails>> {
             PopularMoviesApp.dataManager().loadMovie(movieId, new Callback<MovieDetails>() {
                 @Override
                 public void onResponse(Call<MovieDetails> call, Response<MovieDetails> response) {
-                    getView().setData(response.body());
-                    getView().showContent();
+                    if (getView() != null) {
+                        getView().setData(response.body());
+                        getView().showContent();
+                    }
                 }
 
                 @Override

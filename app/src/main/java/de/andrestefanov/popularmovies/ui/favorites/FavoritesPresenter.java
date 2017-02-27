@@ -17,8 +17,8 @@ public class FavoritesPresenter extends MvpBasePresenter<FavoritesFragment> {
             PopularMoviesApp.dataManager().loadMovie(id, new Callback<MovieDetails>() {
                 @Override
                 public void onResponse(Call<MovieDetails> call, Response<MovieDetails> response) {
-                    if(getView() != null)
-                        getView().addData(response.body().toMovie());
+//                    if(getView() != null)
+//                        getView().addData(response.body().toMovie());
                 }
 
                 @Override

@@ -2,16 +2,19 @@ package de.andrestefanov.popularmovies.data.prefs;
 
 import android.content.SharedPreferences;
 
-import static de.andrestefanov.popularmovies.data.prefs.MoviesFilter.MOVIES_FILTER_POPULAR;
+import static de.andrestefanov.popularmovies.data.prefs.PrefConstants.*;
 
 public class PreferencesHelperImpl implements PreferencesHelper {
-
-    private static final String KEY_MOVIES_FILTER_KEY = "movie_filter";
 
     private SharedPreferences sharedPreferences;
 
     public PreferencesHelperImpl(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
+    }
+
+    @Override
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
     }
 
     @Override

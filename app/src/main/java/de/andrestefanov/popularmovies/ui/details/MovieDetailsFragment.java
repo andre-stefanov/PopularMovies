@@ -20,6 +20,9 @@ import android.widget.LinearLayout;
 
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
+import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
+import com.hannesdorfmann.mosby.mvp.viewstate.lce.MvpLceViewStateFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 import com.squareup.picasso.Callback;
 
 import butterknife.BindView;
@@ -28,7 +31,7 @@ import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
 
-public class MovieDetailsFragment extends MvpLceFragment<LinearLayout, MovieDetails, MvpLceView<MovieDetails>, MoviePresenter> {
+public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, MovieDetails, MvpLceView<MovieDetails>, MoviePresenter> {
 
     private static final String TAG = "MovieDetailsFragment";
 
@@ -49,11 +52,19 @@ public class MovieDetailsFragment extends MvpLceFragment<LinearLayout, MovieDeta
 
     private int movieId;
 
+    private MovieDetails data;
+
     public static MovieDetailsFragment createInstance(int movieId) {
         Log.d(TAG, "createInstance() called with: movieId = [" + movieId + "]");
         MovieDetailsFragment fragment = new MovieDetailsFragment();
         fragment.movieId = movieId;
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -100,7 +111,7 @@ public class MovieDetailsFragment extends MvpLceFragment<LinearLayout, MovieDeta
 
     @Override
     public void setData(MovieDetails movieDetails) {
-        Log.d(TAG, "setData() called with: movieDetails = [" + movieDetails + "]");
+        this.data = movieDetails;
 
         progressBackdrop.show();
         PopularMoviesApp.dataManager().loadBackdrop(movieDetails.getBackdropPath(), backdropImageView, new Callback() {
@@ -121,11 +132,22 @@ public class MovieDetailsFragment extends MvpLceFragment<LinearLayout, MovieDeta
         viewPager.setAdapter(pagerAdapter);
     }
 
+    @NonNull
+    @Override
+    public LceViewState<MovieDetails, MvpLceView<MovieDetails>> createViewState() {
+        return new RetainingLceViewState<>();
+    }
+
     @Override
     public void showContent() {
         Log.d(TAG, "showContent() called");
         contentView.setVisibility(View.VISIBLE);
         loadingView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public MovieDetails getData() {
+        return data;
     }
 
     @Override
