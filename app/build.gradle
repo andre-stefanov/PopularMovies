@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 apply plugin: 'com.github.triplet.play'
 
 if (!project.hasProperty('tmdbApiKey')) {
@@ -66,7 +65,7 @@ dependencies {
 
     // view binding
     compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     // rating
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
