@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_popular"
+        icon="@drawable/ic_whatshot"
+        title="@string/most_popular"
+        barColorWhenSelected="@color/colorMostPopular"/>
+    <tab
+        id="@+id/tab_top_rated"
+        icon="@drawable/ic_star_filled"
+        title="@string/top_rated"
+        barColorWhenSelected="@color/colorTopRated" />
+    <tab
+        id="@+id/tab_settings"
+        icon="@drawable/ic_settings"
+        title="@string/action_settings"
+        barColorWhenSelected="@color/colorSettings" />
+</tabs>

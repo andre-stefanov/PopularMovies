@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.PopularMoviesApp;
@@ -37,6 +39,9 @@ public class OverviewFragment extends Fragment {
 
     @BindView(R.id.movie_rating_text)
     TextView ratingText;
+
+    @BindView(R.id.textview_release_date_value)
+    TextView releaseDate;
 
     public static OverviewFragment createInstance(MovieDetails movie) {
         OverviewFragment fragment = new OverviewFragment();
@@ -89,6 +94,7 @@ public class OverviewFragment extends Fragment {
 
         ratingBar.setRating(movie.getVoteAverage().floatValue() / 2.0f);
         ratingText.setText(movie.getVoteAverage() + " / 10 (" + movie.getVoteCount() + ")");
+        releaseDate.setText(movie.getReleaseDate());
 
         return rootView;
     }

@@ -53,11 +53,15 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // android support library
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support:cardview-v7:25.2.0'
-    compile 'com.android.support:percent:25.2.0'
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
+    compile 'com.android.support:cardview-v7:25.3.0'
+    compile 'com.android.support:percent:25.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // bottom navigation
+    compile 'com.roughike:bottom-bar:2.1.1'
 
     // Content provider
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'

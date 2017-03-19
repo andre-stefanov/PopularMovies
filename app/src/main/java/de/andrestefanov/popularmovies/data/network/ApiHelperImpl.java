@@ -118,7 +118,7 @@ public class ApiHelperImpl implements ApiHelper {
     }
 
     @Override
-    public void loadMovieReviews(int movieId, int page, Callback<ReviewsPage> callback) {
+    public void loadMovieReviews(int movieId, int page, Callback<List<Review>> callback) {
         tmdbRestApiService.loadMovieReviews(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage(), page).enqueue(callback);
     }
 }

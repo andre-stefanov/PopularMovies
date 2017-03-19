@@ -11,6 +11,7 @@ import de.andrestefanov.popularmovies.data.db.DbHelper;
 import de.andrestefanov.popularmovies.data.network.ApiHelper;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
+import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
@@ -82,7 +83,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public void loadMovieReviews(int movieId, int page, retrofit2.Callback<ReviewsPage> callback) {
+    public void loadMovieReviews(int movieId, int page, retrofit2.Callback<List<Review>> callback) {
         mApiHelper.loadMovieReviews(movieId, page, callback);
     }
 

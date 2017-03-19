@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.MvpLceViewStateFragment;
@@ -105,7 +104,6 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
     @NonNull
     @Override
     public MoviePresenter createPresenter() {
-        Log.d(TAG, "createPresenter() called");
         return new MoviePresenter();
     }
 
@@ -140,7 +138,6 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
 
     @Override
     public void showContent() {
-        Log.d(TAG, "showContent() called");
         contentView.setVisibility(View.VISIBLE);
         loadingView.setVisibility(View.INVISIBLE);
     }
@@ -152,11 +149,10 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        Log.d(TAG, "loadData() called with: pullToRefresh = [" + pullToRefresh + "]");
         getPresenter().loadMovieDetails(movieId, pullToRefresh);
     }
 
-    public class MovieDetailsPagerAdapter extends FragmentPagerAdapter {
+    private class MovieDetailsPagerAdapter extends FragmentPagerAdapter {
 
         private Fragment[] fragments;
 
@@ -165,8 +161,8 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
 
             fragments = new Fragment[] {
                     OverviewFragment.createInstance(movie),
-                    VideosFragment.createInstance(movie),
-                    ReviewsFragment.createInstance(movie)
+                    VideosFragment.createInstance(movie.getId()),
+                    ReviewsFragment.createInstance(movie.getId())
             };
         }
 
