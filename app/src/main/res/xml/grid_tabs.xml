@@ -11,6 +11,11 @@
         title="@string/top_rated"
         barColorWhenSelected="@color/colorTopRated" />
     <tab
+        id="@+id/tab_favorites"
+        icon="@drawable/ic_favorite"
+        title="@string/favorites"
+        barColorWhenSelected="@color/colorFavorites" />
+    <tab
         id="@+id/tab_settings"
         icon="@drawable/ic_settings"
         title="@string/action_settings"

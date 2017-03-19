@@ -9,10 +9,6 @@
     <string name="movie_trailer_image">Movie trailer image</string>
     <string name="movie_reviews">Reviews</string>
     <string name="title_activity_main">MainActivity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
     <string name="favorites">Favorites</string>
     <string name="movie_release_date">Release</string>

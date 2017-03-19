@@ -5,7 +5,6 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
@@ -23,9 +22,12 @@ import de.andrestefanov.popularmovies.ui.details.MovieDetailsFragment;
 
 public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener, OnTabSelectListener, FragmentManager.OnBackStackChangedListener {
 
+    @SuppressWarnings("unused")
     private static final String TAG = "MainActivity";
 
     public static final String TAG_RETAINED_FRAGMENT = "RetainedFragment";
+
+    public static final String STATE_BOTTOM_BAR = "STATE_BOTTOM_BAR";
 
     Fragment fragment;
 
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
 
         if (savedInstanceState != null) {
             fragment = fragmentManager.getFragment(savedInstanceState, TAG_RETAINED_FRAGMENT);
+
+            bottomBar.setTranslationY(savedInstanceState.getFloat(STATE_BOTTOM_BAR));
         } else {
             fragment = new MovieGridFragment();
             fragmentManager.beginTransaction()
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, TAG_RETAINED_FRAGMENT, fragment);
+        outState.putFloat(STATE_BOTTOM_BAR, bottomBar.getTranslationY());
     }
 
     @Override
@@ -88,6 +93,9 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
                 break;
             case R.id.tab_top_rated:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.TOP_RATED);
+                break;
+            case R.id.tab_favorites:
+                PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
                 break;
             case R.id.tab_settings:
 
