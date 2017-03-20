@@ -1,20 +1,16 @@
-package de.andrestefanov.popularmovies.ui.main;
+package de.andrestefanov.popularmovies.ui.base;
 
 import android.support.v7.widget.RecyclerView;
 
-import de.andrestefanov.popularmovies.ui.base.PosterGridAdapter;
 import de.andrestefanov.popularmovies.utils.Constants;
 
-class EndlessMoviesAdapter extends PosterGridAdapter {
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private static int THRESHOLD = Constants.TMDB_API_MOVIES_PER_PAGE;
+public class EndlessMoviesAdapter extends PosterGridAdapter {
 
     private boolean loading = false;
 
     private OnMoreDataRequestListener dataRequestListener;
 
-    EndlessMoviesAdapter(OnMoreDataRequestListener moreDataRequestListener) {
+    public EndlessMoviesAdapter(OnMoreDataRequestListener moreDataRequestListener) {
         this.dataRequestListener = moreDataRequestListener;
     }
 
@@ -22,7 +18,7 @@ class EndlessMoviesAdapter extends PosterGridAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
-        if (!loading && position > getData().size() - THRESHOLD) {
+        if (!loading && position > getData().size() - Constants.TMDB_API_MOVIES_PER_PAGE) {
             loading = true;
             dataRequestListener.onRequestMoreData();
         }
@@ -33,7 +29,7 @@ class EndlessMoviesAdapter extends PosterGridAdapter {
         loading = false;
     }
 
-    interface OnMoreDataRequestListener {
+    public interface OnMoreDataRequestListener {
 
         void onRequestMoreData();
 

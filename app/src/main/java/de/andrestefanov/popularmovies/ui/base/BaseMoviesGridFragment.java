@@ -20,7 +20,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 
@@ -34,8 +33,6 @@ public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, 
 
     @BindView(R.id.contentView)
     RecyclerView recyclerView;
-
-    Unbinder unbinder;
 
     public BaseMoviesGridFragment() {
 
@@ -62,7 +59,7 @@ public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_grid, container, false);
-        unbinder = ButterKnife.bind(this, rootView);
+        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -83,7 +80,6 @@ public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, 
     public void onDestroyView() {
         super.onDestroyView();
         adapter = null;
-        unbinder.unbind();
     }
 
     @Override

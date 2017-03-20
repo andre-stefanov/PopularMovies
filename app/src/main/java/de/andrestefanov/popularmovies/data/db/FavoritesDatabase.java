@@ -8,6 +8,7 @@ public final class FavoritesDatabase {
 
     public static final int VERSION = 1;
 
+    @SuppressWarnings("unused")
     @Table(FavoriteColumns.class)
     public static final String FAVORITES = "favorites";
 

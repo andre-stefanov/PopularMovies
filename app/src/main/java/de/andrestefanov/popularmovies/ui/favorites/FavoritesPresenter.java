@@ -1,31 +1,31 @@
 package de.andrestefanov.popularmovies.ui.favorites;
 
+import android.database.Cursor;
+
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
+import java.util.ArrayList;
+
 import de.andrestefanov.popularmovies.PopularMoviesApp;
-import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import de.andrestefanov.popularmovies.data.network.model.Movie;
 
 public class FavoritesPresenter extends MvpBasePresenter<FavoritesFragment> {
-
+    
     void loadFavorites() {
-        Integer[] ids = new Integer[]{328111, 328112, 328113, 328114, 328115};
+        Cursor cursor = PopularMoviesApp.dataManager().getFavorites();
 
-        for (int id : ids)
-            PopularMoviesApp.dataManager().loadMovie(id, new Callback<MovieDetails>() {
-                @Override
-                public void onResponse(Call<MovieDetails> call, Response<MovieDetails> response) {
-//                    if(getView() != null)
-//                        getView().addData(response.body().toMovie());
-                }
+        ArrayList<Movie> result = new ArrayList<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            Movie movie = new Movie();
+            movie.setId(cursor.getInt(0));
+            movie.setPosterPath(cursor.getString(1));
+            result.add(movie);
+        }
 
-                @Override
-                public void onFailure(Call<MovieDetails> call, Throwable t) {
-
-                }
-            });
+        if (getView() != null) {
+            getView().setData(result);
+            getView().showContent();
+        }
     }
 
 }

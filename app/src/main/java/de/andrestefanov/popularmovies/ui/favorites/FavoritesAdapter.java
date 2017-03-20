@@ -42,6 +42,7 @@ public class FavoritesAdapter extends CursorAdapter {
         final ViewHolder vh = (ViewHolder) view.getTag();
 
         vh.progress.setVisibility(View.VISIBLE);
+
         PopularMoviesApp.dataManager().loadMovie(
                 cursor.getInt(cursor.getColumnIndex(FavoriteColumns._ID)),
                 new Callback<MovieDetails>() {

@@ -6,8 +6,6 @@ import de.andrestefanov.popularmovies.ui.base.BaseMoviesGridFragment;
 
 public class FavoritesFragment extends BaseMoviesGridFragment<FavoritesFragment, FavoritesPresenter> {
 
-
-
     public static FavoritesFragment createInstance() {
         return new FavoritesFragment();
     }

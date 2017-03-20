@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -49,6 +50,9 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
     @BindView(R.id.tabs)
     TabLayout tabLayout;
 
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
     private int movieId;
 
     private MovieDetails data;
@@ -68,7 +72,7 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         CoordinatorLayout view = (CoordinatorLayout) inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, view);
 
@@ -79,6 +83,13 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFabChecked(PopularMoviesApp.dataManager().toggleFavorite(data.toMovie()));
             }
         });
 
@@ -110,6 +121,7 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
     @Override
     public void setData(MovieDetails movieDetails) {
         this.data = movieDetails;
+        setFabChecked(PopularMoviesApp.dataManager().isFavorite(data.toMovie()));
 
         progressBackdrop.show();
         PopularMoviesApp.dataManager().loadBackdrop(movieDetails.getBackdropPath(), backdropImageView, new Callback() {
@@ -128,6 +140,13 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
 
         MovieDetailsPagerAdapter pagerAdapter = new MovieDetailsPagerAdapter(getChildFragmentManager(), movieDetails);
         viewPager.setAdapter(pagerAdapter);
+    }
+
+    private void setFabChecked(boolean checked) {
+        if (checked)
+            fab.setImageResource(R.drawable.ic_favorite);
+        else
+            fab.setImageResource(R.drawable.ic_favorite_border);
     }
 
     @NonNull

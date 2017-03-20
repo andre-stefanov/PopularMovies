@@ -1,6 +1,7 @@
 package de.andrestefanov.popularmovies.data;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
@@ -12,7 +13,6 @@ import de.andrestefanov.popularmovies.data.network.ApiHelper;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
 import de.andrestefanov.popularmovies.data.network.model.Review;
-import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
 import de.andrestefanov.popularmovies.data.prefs.PreferencesHelper;
@@ -100,5 +100,20 @@ public class DataManagerImpl implements DataManager {
     @Override
     public MoviesFilter getMovieFilter() {
         return preferencesHelper.getMovieFilter();
+    }
+
+    @Override
+    public Cursor getFavorites() {
+        return mDbHelper.getFavorites();
+    }
+
+    @Override
+    public boolean isFavorite(Movie movie) {
+        return mDbHelper.isFavorite(movie);
+    }
+
+    @Override
+    public boolean toggleFavorite(Movie movie) {
+        return mDbHelper.toggleFavorite(movie);
     }
 }

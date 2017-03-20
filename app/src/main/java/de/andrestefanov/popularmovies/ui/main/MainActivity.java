@@ -5,7 +5,6 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
@@ -19,6 +18,9 @@ import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.prefs.MoviesFilter;
 import de.andrestefanov.popularmovies.ui.base.OnMovieSelectedListener;
 import de.andrestefanov.popularmovies.ui.details.MovieDetailsFragment;
+import de.andrestefanov.popularmovies.ui.favorites.FavoritesFragment;
+import de.andrestefanov.popularmovies.ui.popular.PopularMoviesGridFragment;
+import de.andrestefanov.popularmovies.ui.rated.TopRatedMoviesGridFragment;
 
 public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener, OnTabSelectListener, FragmentManager.OnBackStackChangedListener {
 
@@ -47,11 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
 
             bottomBar.setTranslationY(savedInstanceState.getFloat(STATE_BOTTOM_BAR));
         } else {
-            fragment = new MovieGridFragment();
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                    .add(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
-                    .commit();
+            showPopularMovies();
         }
 
         bottomBar.setOnTabSelectListener(this);
@@ -76,6 +74,30 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
                 .commit();
     }
 
+    private void showPopularMovies() {
+        fragment = new PopularMoviesGridFragment();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
+                .commit();
+    }
+
+    private void showTopRatedMovies() {
+        fragment = new TopRatedMoviesGridFragment();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
+                .commit();
+    }
+
+    private void showFavoriteMovies() {
+        fragment = new FavoritesFragment();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
+                .commit();
+    }
+
     /**
      * The method being called when currently visible {@link BottomBarTab} changes.
      * <p>
@@ -90,12 +112,15 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
         switch (tabId) {
             case R.id.tab_popular:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
+                showPopularMovies();
                 break;
             case R.id.tab_top_rated:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.TOP_RATED);
+                showTopRatedMovies();
                 break;
             case R.id.tab_favorites:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
+                showFavoriteMovies();
                 break;
             case R.id.tab_settings:
 
