@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import de.andrestefanov.popularmovies.PopularMoviesApp;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 
-public class FavoritesPresenter extends MvpBasePresenter<FavoritesFragment> {
+class FavoritesPresenter extends MvpBasePresenter<FavoritesFragment> {
     
     void loadFavorites() {
         Cursor cursor = PopularMoviesApp.dataManager().getFavorites();
