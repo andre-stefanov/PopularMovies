@@ -3,12 +3,15 @@ package de.andrestefanov.popularmovies.ui.main;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,16 +25,14 @@ import de.andrestefanov.popularmovies.ui.favorites.FavoritesFragment;
 import de.andrestefanov.popularmovies.ui.popular.PopularMoviesGridFragment;
 import de.andrestefanov.popularmovies.ui.rated.TopRatedMoviesGridFragment;
 
-public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener, OnTabSelectListener, FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener, OnTabSelectListener {
 
     @SuppressWarnings("unused")
     private static final String TAG = "MainActivity";
 
-    public static final String TAG_RETAINED_FRAGMENT = "RetainedFragment";
-
     public static final String STATE_BOTTOM_BAR = "STATE_BOTTOM_BAR";
 
-    Fragment fragment;
+    FragNavController fragmentsController;
 
     @BindView(R.id.bottom_bar)
     BottomBar bottomBar;
@@ -42,60 +43,49 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        List<Fragment> rootFragments = new ArrayList<>(3);
+        rootFragments.add(new PopularMoviesGridFragment());
+        rootFragments.add(new TopRatedMoviesGridFragment());
+        rootFragments.add(new FavoritesFragment());
+
+        fragmentsController = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.fragment_container, rootFragments, 0);
 
         if (savedInstanceState != null) {
-            fragment = fragmentManager.getFragment(savedInstanceState, TAG_RETAINED_FRAGMENT);
-
             bottomBar.setTranslationY(savedInstanceState.getFloat(STATE_BOTTOM_BAR));
-        } else {
-            showPopularMovies();
         }
 
-        bottomBar.setOnTabSelectListener(this);
+        bottomBar.setOnTabSelectListener(this, false);
+    }
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        if (!fragmentsController.isRootFragment()) {
+            fragmentsController.popFragment();
+            bottomBar.animate().translationY(0);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, TAG_RETAINED_FRAGMENT, fragment);
+
+        if (fragmentsController != null) {
+            fragmentsController.onSaveInstanceState(outState);
+        }
+
         outState.putFloat(STATE_BOTTOM_BAR, bottomBar.getTranslationY());
     }
 
     @Override
     public void onMovieSelected(Movie movie) {
-        Fragment fragment = MovieDetailsFragment.createInstance(movie.getId());
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void showPopularMovies() {
-        fragment = new PopularMoviesGridFragment();
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
-                .commit();
-    }
-
-    private void showTopRatedMovies() {
-        fragment = new TopRatedMoviesGridFragment();
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
-                .commit();
-    }
-
-    private void showFavoriteMovies() {
-        fragment = new FavoritesFragment();
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container, fragment, TAG_RETAINED_FRAGMENT)
-                .commit();
+        fragmentsController.pushFragment(MovieDetailsFragment.createInstance(movie.getId()));
+        bottomBar.animate().translationY(bottomBar.getHeight() * 2);
     }
 
     /**
@@ -112,31 +102,18 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
         switch (tabId) {
             case R.id.tab_popular:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
-                showPopularMovies();
+                fragmentsController.switchTab(FragNavController.TAB1);
                 break;
             case R.id.tab_top_rated:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.TOP_RATED);
-                showTopRatedMovies();
+                fragmentsController.switchTab(FragNavController.TAB2);
                 break;
             case R.id.tab_favorites:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
-                showFavoriteMovies();
+                fragmentsController.switchTab(FragNavController.TAB3);
                 break;
             case R.id.tab_settings:
-
                 break;
-        }
-    }
-
-    /**
-     * Called whenever the contents of the back stack change.
-     */
-    @Override
-    public void onBackStackChanged() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            bottomBar.animate().translationY(bottomBar.getHeight());
-        } else {
-            bottomBar.animate().translationY(0);
         }
     }
 }
