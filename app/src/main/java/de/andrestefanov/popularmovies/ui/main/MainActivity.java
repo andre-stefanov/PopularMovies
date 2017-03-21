@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
                 fragmentsController.switchTab(FragNavController.TAB2);
                 break;
             case R.id.tab_favorites:
-                PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
                 fragmentsController.switchTab(FragNavController.TAB3);
                 break;
             case R.id.tab_settings:
