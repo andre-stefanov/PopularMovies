@@ -27,8 +27,8 @@ public abstract class BaseMoviesPresenter<V extends BaseMoviesGridFragment> exte
         if (refresh)
             data.clear();
 
-        if (getView() != null) {
-            getView().showLoading(refresh);
+        if (getView() != null && refresh) {
+            getView().showLoading(true);
         }
 
         int nextPage = data.size() / Constants.TMDB_API_MOVIES_PER_PAGE + 1;
