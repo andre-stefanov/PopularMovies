@@ -49,9 +49,6 @@ public class VideosAdapter extends BaseAdapter {
 
         Video video = videos.get(position);
 
-        TextView videoTitle = (TextView) convertView.findViewById(R.id.video_title);
-        videoTitle.setText(video.getName());
-
         ImageView videoThumbnail = (ImageView) convertView.findViewById(R.id.video_thumbnail);
         PopularMoviesApp.dataManager().loadVideoImage(video.getKey(), videoThumbnail);
 

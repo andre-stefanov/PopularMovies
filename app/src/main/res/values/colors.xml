@@ -16,7 +16,7 @@
     <color name="colorDivider">#666666</color>
 
     <color name="colorMostPopular">#F44336</color>
-    <color name="colorTopRated">#EF6C00</color>
-    <color name="colorFavorites">#43A047</color>
+    <color name="colorTopRated">#43A047</color>
+    <color name="colorFavorites">@color/colorAccent</color>
     <color name="colorSettings">#757575</color>
 </resources>

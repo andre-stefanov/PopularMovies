@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 
-import org.w3c.dom.Text;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.PopularMoviesApp;
@@ -62,10 +60,12 @@ public class OverviewFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         SpannableString spannableString = new SpannableString(movie.getOverview());
+        int vSpan = getResources().getDimensionPixelSize(R.dimen.overview_poster_height) + getResources().getDimensionPixelSize(R.dimen.text_margin);
+        int hSpan = getResources().getDimensionPixelSize(R.dimen.overview_poster_width) + getResources().getDimensionPixelSize(R.dimen.text_margin);
         spannableString.setSpan(
                 new LeadingMargin(
-                        (getResources().getDimensionPixelSize(R.dimen.overview_poster_height) + getResources().getDimensionPixelSize(R.dimen.text_margin)) / movieOverview.getLineHeight(),
-                        getResources().getDimensionPixelSize(R.dimen.overview_poster_width) + getResources().getDimensionPixelSize(R.dimen.text_margin)),
+                        vSpan / movieOverview.getLineHeight() + 1,
+                        hSpan),
                 0,
                 spannableString.length(),
                 0);
@@ -80,7 +80,7 @@ public class OverviewFragment extends Fragment {
                             @Override
                             public boolean onPreDraw() {
                                 movieOverview.getViewTreeObserver().removeOnPreDrawListener(this);
-                                getActivity().supportStartPostponedEnterTransition();
+//                                getActivity().supportStartPostponedEnterTransition();
                                 return true;
                             }
                         });

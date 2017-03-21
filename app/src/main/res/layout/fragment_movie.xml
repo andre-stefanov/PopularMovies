@@ -58,47 +58,65 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/contentView"
-            android:orientation="vertical"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:tabMode="fixed"
-                app:tabGravity="fill"
-                android:background="#8000"
-                app:tabIndicatorColor="@color/colorAccent"/>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/loadingView"
-            android:visibility="invisible"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:minHeight="120dp">
 
-        <TextView
-            android:id="@+id/errorView"
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            <LinearLayout
+                android:id="@+id/contentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:paddingBottom="72dp">
 
-    </RelativeLayout>
+                <FrameLayout
+                    android:id="@+id/fragment_movie_overview"
+                    android:name="de.andrestefanov.popularmovies.ui.details.OverviewFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_movie_overview"/>
+
+                <FrameLayout
+                    android:id="@+id/fragment_movie_videos"
+                    android:name="de.andrestefanov.popularmovies.ui.details.VideosFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_movie_videos"/>
+
+                <FrameLayout
+                    android:id="@+id/fragment_movie_reviews"
+                    android:name="de.andrestefanov.popularmovies.ui.details.ReviewsFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_movie_reviews"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/errorView"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center" />
+
+        </FrameLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/loadingView"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -107,7 +125,8 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@drawable/ic_favorite"
-        app:layout_anchor="@id/contentView"
-        app:layout_anchorGravity="top|right|end"/>
+        app:borderWidth="0dp"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

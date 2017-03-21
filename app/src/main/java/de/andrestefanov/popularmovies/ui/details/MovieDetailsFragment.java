@@ -5,11 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -44,12 +39,6 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
     @BindView(R.id.backdrop_progress)
     ContentLoadingProgressBar progressBackdrop;
 
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
-
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
-
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
@@ -76,7 +65,6 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
         CoordinatorLayout view = (CoordinatorLayout) inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, view);
 
-        tabLayout.setupWithViewPager(viewPager);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -138,8 +126,17 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
 
         toolbar.setTitle(movieDetails.getTitle());
 
-        MovieDetailsPagerAdapter pagerAdapter = new MovieDetailsPagerAdapter(getChildFragmentManager(), movieDetails);
-        viewPager.setAdapter(pagerAdapter);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_movie_overview, OverviewFragment.createInstance(movieDetails))
+                .commit();
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_movie_videos, VideosFragment.createInstance(movieId))
+                .commit();
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_movie_reviews, ReviewsFragment.createInstance(movieId))
+                .commit();
     }
 
     private void setFabChecked(boolean checked) {
@@ -169,45 +166,6 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
     @Override
     public void loadData(boolean pullToRefresh) {
         getPresenter().loadMovieDetails(movieId, pullToRefresh);
-    }
-
-    private class MovieDetailsPagerAdapter extends FragmentPagerAdapter {
-
-        private Fragment[] fragments;
-
-        MovieDetailsPagerAdapter(FragmentManager fm, MovieDetails movie) {
-            super(fm);
-
-            fragments = new Fragment[] {
-                    OverviewFragment.createInstance(movie),
-                    VideosFragment.createInstance(movie.getId()),
-                    ReviewsFragment.createInstance(movie.getId())
-            };
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return fragments[i];
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.movie_overview);
-                case 1:
-                    return getString(R.string.movie_videos);
-                case 2:
-                    return getString(R.string.movie_reviews);
-                default:
-                    return "NO TITLE";
-            }
-        }
     }
 
 }

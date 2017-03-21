@@ -42,19 +42,34 @@
             android:id="@+id/movie_rating_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="?colorControlActivated"/>
+            android:textAlignment="center"/>
 
-        <TextView
-            android:id="@+id/textview_release_date_title"
-            android:text="@string/movie_release_date"
+        <android.support.v7.widget.GridLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:columnCount="2"
+            app:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textview_release_date_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/textview_release_date_title"
+                android:text="@string/movie_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:padding="4dp"
+                app:layout_gravity="fill"
+                app:layout_columnWeight="1"/>
+
+            <TextView
+                android:id="@+id/textview_release_date_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:padding="4dp"
+                app:layout_gravity="fill"
+                app:layout_columnWeight="1"/>
+
+        </android.support.v7.widget.GridLayout>
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
