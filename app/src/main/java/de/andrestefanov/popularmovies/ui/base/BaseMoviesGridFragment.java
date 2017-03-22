@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +73,7 @@ public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, 
 
         this.recyclerView.setAdapter(this.adapter);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.grid_columns));
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), calculateNoOfColumns());
         this.recyclerView.setLayoutManager(layoutManager);
     }
 
@@ -80,6 +81,12 @@ public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, 
     public void onDestroyView() {
         super.onDestroyView();
         adapter = null;
+    }
+
+    public int calculateNoOfColumns() {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / 180);
     }
 
     @Override
