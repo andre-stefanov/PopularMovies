@@ -3,7 +3,12 @@
     <string name="poster">Poster</string>
     <string name="backdrop_image">Hintergrundbild</string>
     <string name="most_popular">Beliebteste</string>
+    <string name="favorites">Favoriten</string>
     <string name="top_rated">Bestbewertet</string>
     <string name="movie_overview">Überblick</string>
     <string name="movie_videos">Trailer</string>
+    <string name="movie_trailer_image">Filmtrailer Vorschaubild</string>
+    <string name="movie_reviews">Rezensionen</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="movie_release_date">Release</string>
 </resources>

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 apply plugin: 'com.github.triplet.play'
 
 if (!project.hasProperty('tmdbApiKey')) {
@@ -27,9 +26,10 @@ android {
         textReport true
     }
 
+    //noinspection GroovyMissingReturnStatement
     defaultConfig {
         applicationId "de.andrestefanov.popularmovies"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 2
         versionName "1.1"
@@ -51,28 +51,40 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    // Butterknife
-    compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    // android support
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:recyclerview-v7:25.1.1'
-    compile 'com.android.support:cardview-v7:25.1.1'
-    compile 'com.android.support:percent:25.1.1'
 
-    // Multiline collapsible toolbar
+    // android support library
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
+    compile 'com.android.support:percent:25.3.0'
+    compile 'com.android.support:gridlayout-v7:25.3.0'
+
+    // fragments navigation (stacks)
+    compile 'com.ncapdevi:frag-nav:1.4.0'
+
+    // Content provider
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
+    compile 'net.simonvt.schematic:schematic:0.7.0'
+
+    // view binding
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    // rating
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+
+    // mvp
+    compile 'com.hannesdorfmann.mosby:viewstate:2.0.1'
+
+    // multiline collapsible toolbar
     compile 'net.opacapp:multiline-collapsingtoolbar:1.3.1'
 
-    // Picasso
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
-    // Retrofit
+    // network
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-
-    // FAB
-    compile 'com.github.clans:fab:1.6.4'
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 }
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
