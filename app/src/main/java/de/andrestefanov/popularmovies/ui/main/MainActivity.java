@@ -1,14 +1,13 @@
 package de.andrestefanov.popularmovies.ui.main;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.ncapdevi.fragnav.FragNavController;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.BottomBarTab;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +24,15 @@ import de.andrestefanov.popularmovies.ui.favorites.FavoritesFragment;
 import de.andrestefanov.popularmovies.ui.popular.PopularMoviesGridFragment;
 import de.andrestefanov.popularmovies.ui.rated.TopRatedMoviesGridFragment;
 
-public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener, OnTabSelectListener {
+public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemReselectedListener {
 
     @SuppressWarnings("unused")
     private static final String TAG = "MainActivity";
 
-    public static final String STATE_BOTTOM_BAR = "STATE_BOTTOM_BAR";
-
     FragNavController fragmentsController;
 
-    @BindView(R.id.bottom_bar)
-    BottomBar bottomBar;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
 
         fragmentsController = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.fragment_container, rootFragments, 0);
 
-        if (savedInstanceState != null) {
-            bottomBar.setTranslationY(savedInstanceState.getFloat(STATE_BOTTOM_BAR));
-        }
-
-        bottomBar.setOnTabSelectListener(this, false);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnNavigationItemReselectedListener(this);
     }
 
     /**
@@ -65,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
     public void onBackPressed() {
         if (!fragmentsController.isRootFragment()) {
             fragmentsController.popFragment();
-            bottomBar.animate().translationY(0);
         } else {
             super.onBackPressed();
         }
@@ -78,41 +71,52 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
         if (fragmentsController != null) {
             fragmentsController.onSaveInstanceState(outState);
         }
-
-        outState.putFloat(STATE_BOTTOM_BAR, bottomBar.getTranslationY());
     }
 
     @Override
     public void onMovieSelected(Movie movie) {
         fragmentsController.pushFragment(MovieDetailsFragment.createInstance(movie.getId()));
-        bottomBar.animate().translationY(bottomBar.getHeight() * 2);
     }
 
     /**
-     * The method being called when currently visible {@link BottomBarTab} changes.
-     * <p>
-     * This listener is fired for the first time after the items have been set and
-     * also after a configuration change, such as when screen orientation changes
-     * from portrait to landscape.
+     * Called when an item in the bottom navigation menu is selected.
      *
-     * @param tabId the new visible {@link BottomBarTab}
+     * @param item The selected item
+     * @return true to display the item as the selected item and false if the item should not
+     * be selected. Consider setting non-selectable items as disabled preemptively to
+     * make them appear non-interactive.
      */
     @Override
-    public void onTabSelected(@IdRes int tabId) {
-        switch (tabId) {
-            case R.id.tab_popular:
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (!fragmentsController.isRootFragment()) {
+            fragmentsController.popFragment();
+        }
+
+        switch (item.getItemId()) {
+            case R.id.nav_most_popular:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
                 fragmentsController.switchTab(FragNavController.TAB1);
                 break;
-            case R.id.tab_top_rated:
+            case R.id.nav_top_rated:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.TOP_RATED);
                 fragmentsController.switchTab(FragNavController.TAB2);
                 break;
-            case R.id.tab_favorites:
+            case R.id.nav_favorites:
                 fragmentsController.switchTab(FragNavController.TAB3);
                 break;
-            case R.id.tab_settings:
-                break;
+        }
+        return true;
+    }
+
+    /**
+     * Called when the currently selected item in the bottom navigation menu is selected again.
+     *
+     * @param item The selected item
+     */
+    @Override
+    public void onNavigationItemReselected(@NonNull MenuItem item) {
+        if (!fragmentsController.isRootFragment()) {
+            fragmentsController.popFragment();
         }
     }
 }

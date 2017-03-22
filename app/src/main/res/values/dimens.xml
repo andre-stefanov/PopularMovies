@@ -14,4 +14,6 @@
     <dimen name="overview_poster_height">240dp</dimen>
     <dimen name="overview_text_size">15sp</dimen>
 
+    <dimen name="tab_bar_padding">48dp</dimen>
+
 </resources>

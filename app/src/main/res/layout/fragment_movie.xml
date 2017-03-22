@@ -74,8 +74,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="24dp"
-                android:paddingBottom="72dp">
+                android:layout_marginTop="24dp">
 
                 <FrameLayout
                     android:id="@+id/fragment_movie_overview"
@@ -108,15 +107,16 @@
                 android:layout_gravity="center"
                 android:textAlignment="center" />
 
+            <ProgressBar
+                android:id="@+id/loadingView"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
         </FrameLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <ProgressBar
-        android:id="@+id/loadingView"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

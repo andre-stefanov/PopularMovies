@@ -62,9 +62,6 @@ dependencies {
     // fragments navigation (stacks)
     compile 'com.ncapdevi:frag-nav:1.4.0'
 
-    // bottom navigation
-    compile 'com.roughike:bottom-bar:2.1.1'
-
     // Content provider
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
     compile 'net.simonvt.schematic:schematic:0.7.0'
@@ -88,7 +85,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-    compile 'com.github.clans:fab:1.6.4'
 }
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
