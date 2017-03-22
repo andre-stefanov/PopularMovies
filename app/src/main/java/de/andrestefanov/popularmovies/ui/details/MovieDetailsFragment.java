@@ -65,14 +65,16 @@ public class MovieDetailsFragment extends MvpLceViewStateFragment<LinearLayout, 
         CoordinatorLayout view = (CoordinatorLayout) inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, view);
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        if (!getResources().getBoolean(R.bool.large_layout)) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
