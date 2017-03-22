@@ -46,9 +46,11 @@ public class PosterGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return data.size();
     }
 
-    public final void setData(List<Movie> data) {
+    public void setData(List<Movie> data) {
+        int oldSize = this.data.size();
         this.data = data;
-        notifyDataSetChanged();
+
+        notifyItemRangeInserted(oldSize, data.size() - oldSize);
         onDataChanged();
     }
 

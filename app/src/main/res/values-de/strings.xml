@@ -11,4 +11,5 @@
     <string name="movie_reviews">Rezensionen</string>
     <string name="action_settings">Einstellungen</string>
     <string name="movie_release_date">Release</string>
+    <string name="select_movie">Wählen Sie ein Film aus der Liste um seine Details hier zu sehen.</string>
 </resources>

@@ -109,7 +109,13 @@ public abstract class BaseMoviesGridFragment<V extends MvpLceView<List<Movie>>, 
     }
 
     protected PosterGridAdapter createAdapter() {
-        Log.d(TAG, "createAdapter() called");
-        return new PosterGridAdapter();
+        return new PosterGridAdapter() {
+            @Override
+            public void setData(List<Movie> data) {
+                getData().clear();
+                notifyDataSetChanged();
+                super.setData(data);
+            }
+        };
     }
 }

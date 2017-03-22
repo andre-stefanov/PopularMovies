@@ -1,5 +1,5 @@
 <resources>
-    <integer name="grid_columns">2</integer>
+    <bool name="large_layout">false</bool>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
     @SuppressWarnings("unused")
     private static final String TAG = "MainActivity";
 
-    FragNavController fragmentsController;
+    FragNavController tabFragController;
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
         rootFragments.add(new TopRatedMoviesGridFragment());
         rootFragments.add(new FavoritesFragment());
 
-        fragmentsController = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.fragment_container, rootFragments, 0);
+        tabFragController = new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.fragment_container, rootFragments, 0);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setOnNavigationItemReselectedListener(this);
@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
      */
     @Override
     public void onBackPressed() {
-        if (!fragmentsController.isRootFragment()) {
-            fragmentsController.popFragment();
+        if (!tabFragController.isRootFragment()) {
+            tabFragController.popFragment();
         } else {
             super.onBackPressed();
         }
@@ -68,14 +68,19 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (fragmentsController != null) {
-            fragmentsController.onSaveInstanceState(outState);
+        if (tabFragController != null) {
+            tabFragController.onSaveInstanceState(outState);
         }
     }
 
     @Override
     public void onMovieSelected(Movie movie) {
-        fragmentsController.pushFragment(MovieDetailsFragment.createInstance(movie.getId()));
+        if (findViewById(R.id.fragment_movie) == null)
+            tabFragController.pushFragment(MovieDetailsFragment.createInstance(movie.getId()));
+        else
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_movie, MovieDetailsFragment.createInstance(movie.getId()))
+                .commit();
     }
 
     /**
@@ -88,21 +93,21 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (!fragmentsController.isRootFragment()) {
-            fragmentsController.popFragment();
+        if (!tabFragController.isRootFragment()) {
+            tabFragController.popFragment();
         }
 
         switch (item.getItemId()) {
             case R.id.nav_most_popular:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.POPULAR);
-                fragmentsController.switchTab(FragNavController.TAB1);
+                tabFragController.switchTab(FragNavController.TAB1);
                 break;
             case R.id.nav_top_rated:
                 PopularMoviesApp.dataManager().setMovieFilter(MoviesFilter.TOP_RATED);
-                fragmentsController.switchTab(FragNavController.TAB2);
+                tabFragController.switchTab(FragNavController.TAB2);
                 break;
             case R.id.nav_favorites:
-                fragmentsController.switchTab(FragNavController.TAB3);
+                tabFragController.switchTab(FragNavController.TAB3);
                 break;
         }
         return true;
@@ -115,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
      */
     @Override
     public void onNavigationItemReselected(@NonNull MenuItem item) {
-        if (!fragmentsController.isRootFragment()) {
-            fragmentsController.popFragment();
+        if (!tabFragController.isRootFragment()) {
+            tabFragController.popFragment();
         }
     }
 }
