@@ -82,6 +82,36 @@ public class Movie implements Parcelable {
     public Movie() {
     }
 
+    public Movie(String posterPath,
+                 Boolean adult,
+                 String overview,
+                 String releaseDate,
+                 List<Integer> genreIds,
+                 Integer id,
+                 String originalTitle,
+                 String originalLanguage,
+                 String title,
+                 String backdropPath,
+                 Double popularity,
+                 Integer voteCount,
+                 Boolean video,
+                 Double voteAverage) {
+        this.posterPath = posterPath;
+        this.adult = adult;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.genreIds = genreIds;
+        this.id = id;
+        this.originalTitle = originalTitle;
+        this.originalLanguage = originalLanguage;
+        this.title = title;
+        this.backdropPath = backdropPath;
+        this.popularity = popularity;
+        this.voteCount = voteCount;
+        this.video = video;
+        this.voteAverage = voteAverage;
+    }
+
     private Movie(Parcel in) {
         this.posterPath = in.readString();
         this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
@@ -233,5 +263,13 @@ public class Movie implements Parcelable {
         dest.writeValue(this.voteCount);
         dest.writeValue(this.video);
         dest.writeValue(this.voteAverage);
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

@@ -3,6 +3,7 @@ package de.andrestefanov.popularmovies.data.network.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -76,6 +77,10 @@ public class MovieDetails {
     @Expose
     private Integer revenue;
 
+    @SerializedName("reviews")
+    @Expose
+    private List<Review> reviews = null;
+
     @SerializedName("runtime")
     @Expose
     private Integer runtime;
@@ -99,6 +104,10 @@ public class MovieDetails {
     @SerializedName("video")
     @Expose
     private Boolean video;
+
+    @SerializedName("videos")
+    @Expose
+    private List<Video> videos;
 
     @SerializedName("vote_average")
     @Expose
@@ -244,6 +253,14 @@ public class MovieDetails {
         this.revenue = revenue;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     public Integer getRuntime() {
         return runtime;
     }
@@ -292,6 +309,14 @@ public class MovieDetails {
         this.video = video;
     }
 
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
     public Double getVoteAverage() {
         return voteAverage;
     }
@@ -308,4 +333,20 @@ public class MovieDetails {
         this.voteCount = voteCount;
     }
 
+    @Override
+    public String toString() {
+        return "MovieDetails{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
+    public Movie toMovie() {
+        List<Integer> genreIds = new ArrayList<>();
+        for (Genre genre : genres)
+            genreIds.add(genre.getId());
+
+        return new Movie(posterPath, adult, overview, releaseDate, genreIds, id, originalTitle,
+                originalLanguage, title, backdropPath, popularity, voteCount, video, voteAverage);
+    }
 }

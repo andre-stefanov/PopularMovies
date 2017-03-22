@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment;
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
+import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
+import com.hannesdorfmann.mosby.mvp.viewstate.lce.MvpLceViewStateFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 
 import java.util.List;
 
@@ -19,17 +22,34 @@ import butterknife.ButterKnife;
 import de.andrestefanov.popularmovies.R;
 import de.andrestefanov.popularmovies.data.network.model.Review;
 
-public class ReviewsFragment extends MvpLceFragment<LinearLayout, List<Review>, MvpLceView<List<Review>>, ReviewsPresenter> {
+public class ReviewsFragment extends MvpLceViewStateFragment<RelativeLayout, List<Review>, MvpLceView<List<Review>>, ReviewsPresenter> {
+
+    @SuppressWarnings("unused")
+    private static final String TAG = "ReviewsFragment";
 
     @BindView(R.id.contentView)
     LinearLayout reviewsContainer;
 
     private int movieId;
 
+    private List<Review> data;
+
     public static ReviewsFragment createInstance(int movieId) {
-        ReviewsFragment fragment = new ReviewsFragment();
-        fragment.movieId = movieId;
-        return fragment;
+        ReviewsFragment reviewsFragment = new ReviewsFragment();
+        reviewsFragment.movieId = movieId;
+        return reviewsFragment;
+    }
+
+    @NonNull
+    @Override
+    public ReviewsPresenter createPresenter() {
+        return new ReviewsPresenter(movieId);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -40,11 +60,15 @@ public class ReviewsFragment extends MvpLceFragment<LinearLayout, List<Review>, 
         return rootView;
     }
 
+    @NonNull
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public LceViewState<List<Review>, MvpLceView<List<Review>>> createViewState() {
+        return new RetainingLceViewState<>();
+    }
 
-        loadData(false);
+    @Override
+    public List<Review> getData() {
+        return data;
     }
 
     @Override
@@ -52,14 +76,10 @@ public class ReviewsFragment extends MvpLceFragment<LinearLayout, List<Review>, 
         return e.getMessage();
     }
 
-    @NonNull
-    @Override
-    public ReviewsPresenter createPresenter() {
-        return new ReviewsPresenter(movieId);
-    }
-
     @Override
     public void setData(List<Review> data) {
+        this.data = data;
+
         for (Review review : data) {
             View videoView = getActivity().getLayoutInflater().inflate(R.layout.view_review, reviewsContainer, false);
             ((TextView) videoView.findViewById(R.id.review_title)).setText(review.getAuthor());
@@ -70,6 +90,6 @@ public class ReviewsFragment extends MvpLceFragment<LinearLayout, List<Review>, 
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        getPresenter().loadReviews(pullToRefresh);
+        getPresenter().loadData(pullToRefresh);
     }
 }

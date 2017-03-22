@@ -11,18 +11,16 @@ import retrofit2.Response;
 
 class MoviePresenter extends MvpBasePresenter<MvpLceView<MovieDetails>> {
 
-    private int movieId;
-
-    MoviePresenter(int movieId) {
-        this.movieId = movieId;
-    }
-
-    void loadMovieDetails(final boolean pullToRefresh) {
+    void loadMovieDetails(int movieId, final boolean pullToRefresh) {
         if (getView() != null) {
+            getView().showLoading(pullToRefresh);
             PopularMoviesApp.dataManager().loadMovie(movieId, new Callback<MovieDetails>() {
                 @Override
                 public void onResponse(Call<MovieDetails> call, Response<MovieDetails> response) {
-                    getView().setData(response.body());
+                    if (getView() != null) {
+                        getView().setData(response.body());
+                        getView().showContent();
+                    }
                 }
 
                 @Override

@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
+import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import retrofit2.Callback;
@@ -32,6 +33,6 @@ public interface ApiHelper {
 
     void loadVideoImage(String videoKey, ImageView imageView, com.squareup.picasso.Callback callback);
 
-    void loadMovieReviews(int movieId, int page, Callback<ReviewsPage> callback);
+    void loadMovieReviews(int movieId, int page, Callback<List<Review>> callback);
 
 }

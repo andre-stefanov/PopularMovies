@@ -13,7 +13,7 @@ import java.util.List;
 
 import de.andrestefanov.popularmovies.data.network.model.Video;
 
-public class VideoListDeserializer implements JsonDeserializer<List<Video>> {
+class VideoListDeserializer implements JsonDeserializer<List<Video>> {
 
     private Gson gson = new Gson();
 

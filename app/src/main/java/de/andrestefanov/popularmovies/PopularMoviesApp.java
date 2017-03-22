@@ -1,7 +1,6 @@
 package de.andrestefanov.popularmovies;
 
 import android.app.Application;
-import android.util.Log;
 
 import de.andrestefanov.popularmovies.data.DataManager;
 import de.andrestefanov.popularmovies.data.DataManagerImpl;
@@ -23,7 +22,7 @@ public class PopularMoviesApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        DbHelper dbHelper = new DbHelperImpl();
+        DbHelper dbHelper = new DbHelperImpl(getContentResolver());
         ApiHelper apiHelper = new ApiHelperImpl(this);
         PreferencesHelper preferencesHelper = new PreferencesHelperImpl(getSharedPreferences(PrefConstants.PREFS_FILE_NAME, MODE_PRIVATE));
 

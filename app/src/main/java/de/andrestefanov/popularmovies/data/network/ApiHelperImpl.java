@@ -15,6 +15,7 @@ import java.util.Locale;
 import de.andrestefanov.popularmovies.BuildConfig;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.data.network.model.MovieDetails;
+import de.andrestefanov.popularmovies.data.network.model.Review;
 import de.andrestefanov.popularmovies.data.network.model.ReviewsPage;
 import de.andrestefanov.popularmovies.data.network.model.Video;
 import de.andrestefanov.popularmovies.utils.Constants;
@@ -40,6 +41,7 @@ public class ApiHelperImpl implements ApiHelper {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(new TypeToken<List<Movie>>(){}.getType(), new MovieListDeserializer())
                 .registerTypeAdapter(new TypeToken<List<Video>>(){}.getType(), new VideoListDeserializer())
+                .registerTypeAdapter(new TypeToken<List<Review>>(){}.getType(), new ReviewListDeserializer())
                 .create();
         tmdbRestApiService = new Retrofit.Builder()
                 .client(httpClient)
@@ -116,7 +118,7 @@ public class ApiHelperImpl implements ApiHelper {
     }
 
     @Override
-    public void loadMovieReviews(int movieId, int page, Callback<ReviewsPage> callback) {
+    public void loadMovieReviews(int movieId, int page, Callback<List<Review>> callback) {
         tmdbRestApiService.loadMovieReviews(movieId, BuildConfig.TMBD_API_KEY, Locale.getDefault().getLanguage(), page).enqueue(callback);
     }
 }
