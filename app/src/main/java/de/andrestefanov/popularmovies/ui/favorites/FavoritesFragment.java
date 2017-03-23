@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import de.andrestefanov.popularmovies.data.db.AppContentProvider;
+import de.andrestefanov.popularmovies.data.contentprovider.FavoritesProvider;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 import de.andrestefanov.popularmovies.ui.base.BaseMoviesGridFragment;
 import de.andrestefanov.popularmovies.ui.base.PosterGridAdapter;
@@ -28,7 +28,7 @@ public class FavoritesFragment extends BaseMoviesGridFragment<FavoritesFragment,
             }
         };
 
-        getContext().getContentResolver().registerContentObserver(AppContentProvider.Favorites.CONTENT_URI, true, observer);
+        getContext().getContentResolver().registerContentObserver(FavoritesProvider.CONTENT_URI, true, observer);
     }
 
     @Override

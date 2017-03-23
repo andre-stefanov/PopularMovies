@@ -62,10 +62,6 @@ dependencies {
     // fragments navigation (stacks)
     compile 'com.ncapdevi:frag-nav:1.4.0'
 
-    // Content provider
-    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
-    compile 'net.simonvt.schematic:schematic:0.7.0'
-
     // view binding
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
