@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import de.andrestefanov.popularmovies.data.contentprovider.FavoritesProvider;
 import de.andrestefanov.popularmovies.data.network.model.Movie;
 
 public class DbHelperImpl implements DbHelper {
@@ -17,25 +18,25 @@ public class DbHelperImpl implements DbHelper {
 
     @Override
     public Cursor getFavorites() {
-        return contentResolver.query(AppContentProvider.Favorites.CONTENT_URI, null, null, null, null);
+        return contentResolver.query(FavoritesProvider.CONTENT_URI, null, null, null, null);
     }
 
     @Override
     public boolean isFavorite(Movie movie) {
-        return count(AppContentProvider.Favorites.CONTENT_URI, "_id = ?", new String[]{String.valueOf(movie.getId())}) == 1;
+        return count(FavoritesProvider.CONTENT_URI, "_id = ?", new String[]{String.valueOf(movie.getId())}) == 1;
     }
 
     @Override
     public boolean toggleFavorite(Movie movie) {
         if (!isFavorite(movie)) {
             ContentValues cv = new ContentValues();
-            cv.put(FavoriteColumns._ID, movie.getId());
-            cv.put(FavoriteColumns.POSTER, movie.getPosterPath());
+            cv.put(FavoritesProvider._ID, movie.getId());
+            cv.put(FavoritesProvider.POSTER, movie.getPosterPath());
             
-            contentResolver.insert(AppContentProvider.Favorites.CONTENT_URI, cv);
+            contentResolver.insert(FavoritesProvider.CONTENT_URI, cv);
             return true;
         } else {
-            contentResolver.delete(AppContentProvider.Favorites.CONTENT_URI, "_id = ?", new String[]{String.valueOf(movie.getId())});
+            contentResolver.delete(FavoritesProvider.CONTENT_URI, "_id = ?", new String[]{String.valueOf(movie.getId())});
             return false;
         }
     }
