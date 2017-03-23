@@ -13,8 +13,8 @@
         android:theme="@style/AppTheme">
 
         <provider
-            android:name=".data.db.generated.AppContentProvider"
-            android:authorities="de.andrestefanov.popularmovies.data.db.AppContentProvider"
+            android:name=".data.contentprovider.FavoritesProvider"
+            android:authorities="de.andrestefanov.popularmovies.provider"
             android:exported="false"/>
 
         <activity
